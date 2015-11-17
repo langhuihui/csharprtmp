@@ -1,0 +1,11 @@
+D:\projects\csharprtmp\Temp\bin\Release\Temp.exe.config
+D:\projects\csharprtmp\Temp\bin\Release\Temp.exe
+D:\projects\csharprtmp\Temp\bin\Release\Temp.pdb
+D:\projects\csharprtmp\Temp\bin\Release\Common.dll
+D:\projects\csharprtmp\Temp\bin\Release\Newtonsoft.Json.dll
+D:\projects\csharprtmp\Temp\bin\Release\Common.pdb
+D:\projects\csharprtmp\Temp\obj\Release\Temp.csprojResolveAssemblyReference.cache
+D:\projects\csharprtmp\Temp\obj\Release\Temp.exe
+D:\projects\csharprtmp\Temp\obj\Release\Temp.pdb
+D:\projects\csharprtmp\Temp\bin\Release\Microsoft.IO.RecyclableMemoryStream.dll
+D:\projects\csharprtmp\Temp\bin\Release\Microsoft.IO.RecyclableMemoryStream.pdb

@@ -1,0 +1,14 @@
+D:\projects\csharprtmp\csharprtmp\obj\x86\Debug\csharprtmp.exe
+D:\projects\csharprtmp\csharprtmp\obj\x86\Debug\csharprtmp.pdb
+D:\projects\csharprtmp\csharprtmp\bin\Debug\Config.json
+D:\projects\csharprtmp\csharprtmp\bin\Debug\csharprtmp.exe
+D:\projects\csharprtmp\csharprtmp\bin\Debug\csharprtmp.pdb
+D:\projects\csharprtmp\csharprtmp\bin\Debug\Common.dll
+D:\projects\csharprtmp\csharprtmp\bin\Debug\Core.dll
+D:\projects\csharprtmp\csharprtmp\bin\Debug\Newtonsoft.Json.dll
+D:\projects\csharprtmp\csharprtmp\bin\Debug\Common.pdb
+D:\projects\csharprtmp\csharprtmp\bin\Debug\Core.pdb
+D:\projects\csharprtmp\csharprtmp\obj\x86\Debug\csharprtmp.csprojResolveAssemblyReference.cache
+D:\projects\csharprtmp\csharprtmp\bin\Debug\csharprtmp.exe.config
+D:\projects\csharprtmp\csharprtmp\bin\Debug\Microsoft.IO.RecyclableMemoryStream.dll
+D:\projects\csharprtmp\csharprtmp\bin\Debug\Microsoft.IO.RecyclableMemoryStream.pdb

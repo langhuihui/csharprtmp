@@ -1,0 +1,8 @@
+D:\projects\csharprtmp\csharprtmp\bin\Debug\applications\cluster\Application.cs
+D:\projects\csharprtmp\csharprtmp\bin\Debug\applications\cluster\cluster.dll
+D:\projects\csharprtmp\csharprtmp\bin\Debug\applications\cluster\cluster.pdb
+D:\projects\csharprtmp\bin\Debug\applications\cluster\cluster.dll
+D:\projects\csharprtmp\bin\Debug\applications\cluster\cluster.pdb
+D:\projects\csharprtmp\cluster\obj\Debug\cluster.dll
+D:\projects\csharprtmp\cluster\obj\Debug\cluster.pdb
+D:\projects\csharprtmp\cluster\obj\Debug\cluster.csprojResolveAssemblyReference.cache

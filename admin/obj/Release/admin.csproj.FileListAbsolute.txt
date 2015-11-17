@@ -1,0 +1,7 @@
+D:\projects\csharprtmp\admin\bin\Release\admin.dll
+D:\projects\csharprtmp\admin\bin\Release\admin.pdb
+D:\projects\csharprtmp\admin\obj\Release\admin.csprojResolveAssemblyReference.cache
+D:\projects\csharprtmp\admin\obj\Release\admin.dll
+D:\projects\csharprtmp\admin\obj\Release\admin.pdb
+D:\projects\csharprtmp\bin\Release\applications\admin\admin.dll
+D:\projects\csharprtmp\bin\Release\applications\admin\admin.pdb

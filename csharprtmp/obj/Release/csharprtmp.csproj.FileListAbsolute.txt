@@ -1,0 +1,15 @@
+D:\projects\csharprtmp\csharprtmp\bin\Release\Config.json
+D:\projects\csharprtmp\csharprtmp\bin\Release\csharprtmp.exe
+D:\projects\csharprtmp\csharprtmp\bin\Release\csharprtmp.pdb
+D:\projects\csharprtmp\csharprtmp\bin\Release\Common.dll
+D:\projects\csharprtmp\csharprtmp\bin\Release\Core.dll
+D:\projects\csharprtmp\csharprtmp\bin\Release\Newtonsoft.Json.dll
+D:\projects\csharprtmp\csharprtmp\bin\Release\Common.pdb
+D:\projects\csharprtmp\csharprtmp\bin\Release\Core.pdb
+D:\projects\csharprtmp\csharprtmp\obj\Release\csharprtmp.exe
+D:\projects\csharprtmp\csharprtmp\obj\Release\csharprtmp.pdb
+D:\projects\csharprtmp\bin\Release\Config.json
+D:\projects\csharprtmp\bin\Release\csharprtmp.exe
+D:\projects\csharprtmp\bin\Release\csharprtmp.pdb
+D:\projects\csharprtmp\csharprtmp\obj\Release\csharprtmp.csprojResolveAssemblyReference.cache
+D:\projects\csharprtmp\bin\Release\csharprtmp.exe.config

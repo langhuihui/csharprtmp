@@ -1,0 +1,8 @@
+D:\projects\csharprtmp\cluster\bin\Release\Application.cs
+D:\projects\csharprtmp\cluster\bin\Release\cluster.dll
+D:\projects\csharprtmp\cluster\bin\Release\cluster.pdb
+D:\projects\csharprtmp\cluster\obj\Release\cluster.csprojResolveAssemblyReference.cache
+D:\projects\csharprtmp\cluster\obj\Release\cluster.dll
+D:\projects\csharprtmp\cluster\obj\Release\cluster.pdb
+D:\projects\csharprtmp\bin\Release\applications\cluster\cluster.dll
+D:\projects\csharprtmp\bin\Release\applications\cluster\cluster.pdb

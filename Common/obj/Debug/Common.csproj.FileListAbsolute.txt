@@ -1,0 +1,12 @@
+D:\projects\csharprtmp\Common\bin\Debug\Common.dll
+D:\projects\csharprtmp\Common\bin\Debug\Common.pdb
+D:\projects\csharprtmp\Common\bin\Debug\Microsoft.IO.RecyclableMemoryStream.dll
+D:\projects\csharprtmp\Common\bin\Debug\Newtonsoft.Json.dll
+D:\projects\csharprtmp\Common\bin\Debug\Microsoft.IO.RecyclableMemoryStream.pdb
+D:\projects\csharprtmp\Common\obj\Debug\Common.csprojResolveAssemblyReference.cache
+D:\projects\csharprtmp\Common\obj\Debug\Common.dll
+D:\projects\csharprtmp\Common\obj\Debug\Common.pdb
+D:\projects\csharprtmp\Common\bin\Debug\log4net.dll
+D:\projects\csharprtmp\Common\bin\Debug\this.Log-log4net.dll
+D:\projects\csharprtmp\Common\bin\Debug\this.Log.dll
+D:\projects\csharprtmp\Common\bin\Debug\log4net.xml

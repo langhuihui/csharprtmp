@@ -1,0 +1,14 @@
+D:\projects\csharprtmp\Core\bin\Release\Core.dll
+D:\projects\csharprtmp\Core\bin\Release\Core.pdb
+D:\projects\csharprtmp\Core\bin\Release\Common.dll
+D:\projects\csharprtmp\Core\bin\Release\Newtonsoft.Json.dll
+D:\projects\csharprtmp\Core\bin\Release\Common.pdb
+D:\projects\csharprtmp\Core\obj\Release\Core.csprojResolveAssemblyReference.cache
+D:\projects\csharprtmp\Core\obj\Release\Core.dll
+D:\projects\csharprtmp\Core\obj\Release\Core.pdb
+D:\projects\csharprtmp\Core\bin\Release\Microsoft.IO.RecyclableMemoryStream.dll
+D:\projects\csharprtmp\Core\bin\Release\Microsoft.IO.RecyclableMemoryStream.pdb
+D:\projects\csharprtmp\Core\bin\Release\System.Collections.Immutable.dll
+D:\projects\csharprtmp\Core\bin\Release\System.Threading.Tasks.Dataflow.dll
+D:\projects\csharprtmp\Core\bin\Release\System.Collections.Immutable.xml
+D:\projects\csharprtmp\Core\bin\Release\System.Threading.Tasks.Dataflow.xml

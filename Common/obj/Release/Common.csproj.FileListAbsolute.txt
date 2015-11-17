@@ -1,0 +1,8 @@
+D:\projects\csharprtmp\Common\bin\Release\Common.dll
+D:\projects\csharprtmp\Common\bin\Release\Common.pdb
+D:\projects\csharprtmp\Common\bin\Release\Newtonsoft.Json.dll
+D:\projects\csharprtmp\Common\obj\Release\Common.csprojResolveAssemblyReference.cache
+D:\projects\csharprtmp\Common\obj\Release\Common.dll
+D:\projects\csharprtmp\Common\obj\Release\Common.pdb
+D:\projects\csharprtmp\Common\bin\Release\Microsoft.IO.RecyclableMemoryStream.dll
+D:\projects\csharprtmp\Common\bin\Release\Microsoft.IO.RecyclableMemoryStream.pdb

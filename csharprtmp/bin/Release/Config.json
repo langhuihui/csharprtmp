@@ -1,0 +1,43 @@
+﻿{
+    "rootDirectory": "applications",
+    "applications": [
+        {
+            "name":"admin",
+            "acceptors":[
+                {
+                    "ip":  "0.0.0.0",
+                    "port": 1111,
+                    "protocol": "rtmp"
+                },
+                {
+                    "ip":  "0.0.0.0",
+                    "port": 1111,
+                    "protocol": "rtmfp"
+                }]
+        },
+        {
+            "name": "cluster",
+            "master": "cluster://192.168.20.56:1936"
+        },
+        {
+            "name" :  "Test",
+            "acceptors": [
+                {
+                    "ip":  "0.0.0.0",
+                    "port": 1936,
+                    "protocol": "rtmp"
+                }
+            ]
+        },
+        {
+            "name": "live",
+            "acceptors": [
+               {
+                    "ip":  "0.0.0.0",
+                    "port": 1935,
+                    "protocol": "rtmfp"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,278 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{930DDA9C-3FC7-4B63-A7FD-58AE15B99309}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>CSharpRTMP.Core</RootNamespace>
+    <AssemblyName>Core</AssemblyName>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;HAS_LUA;HAS_PROTOCOL_HTTP;HAS_PROTOCOL_RTMP;HAS_PROTOCOL_RTP;HAS_PROTOCOL_LIVEFLV;HAS_PROTOCOL_TS;HAS_PROTOCOL_VAR;HAS_PROTOCOL_CLI;HAS_MEDIA_MP3;HAS_MEDIA_MP4;HAS_MEDIA_FLV;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <DefineConstants>HAS_LUA;HAS_PROTOCOL_HTTP;HAS_PROTOCOL_RTMP;HAS_PROTOCOL_RTP;HAS_PROTOCOL_LIVEFLV;HAS_PROTOCOL_TS;HAS_PROTOCOL_VAR;HAS_PROTOCOL_CLI;HAS_MEDIA_MP3;HAS_MEDIA_MP4;HAS_MEDIA_FLV;</DefineConstants>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Collections.Immutable, Version=1.1.37.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Immutable.1.1.37\lib\dotnet\System.Collections.Immutable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Threading.Tasks.Dataflow, Version=4.5.24.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Tpl.Dataflow.4.5.24\lib\portable-net45+win8+wpa81\System.Threading.Tasks.Dataflow.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="this.Log, Version=0.0.3.0, Culture=neutral, PublicKeyToken=cbf7544467682e94, processorArchitecture=MSIL">
+      <HintPath>..\packages\this.Log.0.0.3.0\lib\net40\this.Log.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AppProtocolHandlerAttribute.cs" />
+    <Compile Include="BaseAppProtocolHandler.cs" />
+    <Compile Include="BaseClientApplication.cs" />
+    <Compile Include="CallErrorException.cs" />
+    <Compile Include="ClientApplicationManager.cs" />
+    <Compile Include="CustomFunctionAttribute.cs" />
+    <Compile Include="ConfigFile.cs" />
+    <Compile Include="MediaFormats\BaseMediaDocument.cs" />
+    <Compile Include="MediaFormats\Codec.cs" />
+    <Compile Include="MediaFormats\ID3Parser.cs" />
+    <Compile Include="MediaFormats\MediaFrame.cs" />
+    <Compile Include="MediaFormats\MP4Document.cs" />
+    <Compile Include="MediaFormats\mp4\AbstractTrack.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomSBGP.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomSDTP.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomAVC1.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomAVCC.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomCO64.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomCTTS.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomDATA.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomDINF.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomDREF.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomEDTS.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomELST.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomESDS.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomFTYP.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomHDLR.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomHMHD.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomILST.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomMDAT.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomMDHD.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomMDIA.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomMETA.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomMetaField.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomMFHD.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomMINF.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomMOOF.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomMOOV.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomMP4A.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomMVEX.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomMVHD.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomNMHD.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomSAIO.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomSGPD.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomSTHD.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomSUBS.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomTRUN.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomUDTA.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomURL.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomVMHD.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomWAVE.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomNULL.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomSMHD.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomSTBL.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomSTCO.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomSTSC.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomSTSD.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomSTSS.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomSTSZ.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomSTTS.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomTFHD.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomTKHD.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomTRAF.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomTrak.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\AtomTREX.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\BaseAtom.cs" />
+    <Compile Include="MediaFormats\mp4\boxes\IgnoredAtom.cs" />
+    <Compile Include="MediaFormats\mp4\Edit.cs" />
+    <Compile Include="MediaFormats\mp4\IGroupEntry.cs" />
+    <Compile Include="MediaFormats\mp4\IsoTypeReader.cs" />
+    <Compile Include="MediaFormats\mp4\IsoTypeWriter.cs" />
+    <Compile Include="MediaFormats\mp4\Math.cs" />
+    <Compile Include="MediaFormats\mp4\Matrix.cs" />
+    <Compile Include="MediaFormats\mp4\Movie.cs" />
+    <Compile Include="MediaFormats\mp4\Mp4Builder.cs" />
+    <Compile Include="MediaFormats\mp4\TimeBasedFragmenter.cs" />
+    <Compile Include="Module.cs" />
+    <Compile Include="NetIO\IOHandler.cs" />
+    <Compile Include="NetIO\IOHandlerManager.cs" />
+    <Compile Include="NetIO\IOTimer.cs" />
+    <Compile Include="NetIO\SocketAsyncEventArgsPool.cs" />
+    <Compile Include="NetIO\TCPAcceptor.cs" />
+    <Compile Include="NetIO\TCPCarrier.cs" />
+    <Compile Include="NetIO\TCPConnector.cs" />
+    <Compile Include="NetIO\UDPCarrier.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Protocols\Cluster\BaseClusterProtocol.cs" />
+    <Compile Include="Protocols\BaseProtocol.cs" />
+    <Compile Include="Protocols\BaseProtocolFactory.cs" />
+    <Compile Include="Protocols\BaseSSLProtocol.cs" />
+    <Compile Include="Protocols\Cluster\BaseClusterAppProtocolHandler.cs" />
+    <Compile Include="Protocols\Cluster\InboundClusterProtocol.cs" />
+    <Compile Include="Protocols\Cluster\InClusterStream.cs" />
+    <Compile Include="Protocols\Cluster\MasterClusterAppProtocolHandler.cs" />
+    <Compile Include="Protocols\Cluster\SlaveClusterAppProtocolHandler.cs" />
+    <Compile Include="Protocols\DefaultProtocolFactory.cs" />
+    <Compile Include="Protocols\InboundSSLProtocol.cs" />
+    <Compile Include="Protocols\Cluster\OutboundClusterProtocol.cs" />
+    <Compile Include="Protocols\Mp4\Mp4AppProtocolHandler.cs" />
+    <Compile Include="Protocols\Mp4\Mp4Protocol.cs" />
+    <Compile Include="Protocols\Mp4\OutNetMP4RTMPStream.cs" />
+    <Compile Include="Protocols\OutboundSSLProtocol.cs" />
+    <Compile Include="Protocols\ProtocolFactoryManager.cs" />
+    <Compile Include="Protocols\ProtocolManager.cs" />
+    <Compile Include="Protocols\ProtocolTypeAttribute.cs" />
+    <Compile Include="Protocols\Cluster\OutClusterStream.cs" />
+    <Compile Include="Protocols\Rtmfp\BaseRtmfpProtocol.cs" />
+    <Compile Include="Protocols\Rtmfp\MiddleRTMFPProtocol.cs" />
+    <Compile Include="Protocols\Rtmfp\OutboundHandshake.cs" />
+    <Compile Include="Protocols\Rtmfp\OutboundRTMFPProtocol.cs" />
+    <Compile Include="Protocols\Rtmfp\RtmfpWriter.cs" />
+    <Compile Include="Protocols\Rtmp\OutNetRTMP4TSStream.cs" />
+    <Compile Include="Protocols\Rtsp\BaseConnectivity.cs" />
+    <Compile Include="Protocols\Rtsp\BaseOutNetRTPUDPStream.cs" />
+    <Compile Include="Protocols\Rtsp\BaseRtspAppProtocolHandler.cs" />
+    <Compile Include="Protocols\Rtsp\MsgHdr.cs" />
+    <Compile Include="Protocols\Rtsp\HTTPAuthHelper.cs" />
+    <Compile Include="Protocols\Rtsp\NATTraversalProtocol.cs" />
+    <Compile Include="Protocols\Rtsp\OutboundConnectivity.cs" />
+    <Compile Include="Protocols\Rtsp\NaluTypes.cs" />
+    <Compile Include="Protocols\Rtsp\OutNetRTPUDPH264Stream.cs" />
+    <Compile Include="Protocols\Rtsp\RtspProtocol.cs" />
+    <Compile Include="Protocols\Rtsp\SDP.cs" />
+    <Compile Include="Protocols\Rtsp\InboundConnectivity.cs" />
+    <Compile Include="Protocols\Rtsp\InboundRtpProtocol.cs" />
+    <Compile Include="Protocols\Rtsp\InNetRTPStream.cs" />
+    <Compile Include="Protocols\Rtsp\RtcpProtocol.cs" />
+    <Compile Include="Protocols\WebRtc\WebRtcAppProtocolHandler.cs" />
+    <Compile Include="Protocols\WebRtc\WebRtcSignalProtocol.cs" />
+    <Compile Include="Protocols\WebRtc\WebSocketProtocol.cs" />
+    <Compile Include="Streaming\StreamTypeAttribute.cs" />
+    <Compile Include="Protocols\Rtmfp\AES.cs" />
+    <Compile Include="Protocols\Rtmfp\AESEngine.cs" />
+    <Compile Include="Protocols\Rtmfp\AMFObjectWriter.cs" />
+    <Compile Include="Protocols\Rtmfp\BaseRtmfpAppProtocolHandler.cs" />
+    <Compile Include="Protocols\Rtmfp\Cookie.cs" />
+    <Compile Include="Protocols\Rtmfp\Entity.cs" />
+    <Compile Include="Protocols\Rtmfp\Flow.cs" />
+    <Compile Include="Protocols\Rtmfp\FlowConnection.cs" />
+    <Compile Include="Protocols\Rtmfp\FlowGroup.cs" />
+    <Compile Include="Protocols\Rtmfp\FlowStream.cs" />
+    <Compile Include="Protocols\Rtmfp\FlowWriter.cs" />
+    <Compile Include="Protocols\Rtmfp\Group.cs" />
+    <Compile Include="Protocols\Rtmfp\HandShake.cs" />
+    <Compile Include="Protocols\Rtmfp\IBandWriter.cs" />
+    <Compile Include="Protocols\Rtmfp\InNetRtmfpStream.cs" />
+    <Compile Include="Protocols\Rtmfp\Message.cs" />
+    <Compile Include="Protocols\Rtmfp\Middle.cs" />
+    <Compile Include="Protocols\Rtmfp\OutNetRtmfpStream.cs" />
+    <Compile Include="Protocols\Rtmfp\Peer.cs" />
+    <Compile Include="Protocols\Rtmfp\QualityOfService.cs" />
+    <Compile Include="Protocols\Rtmfp\RtmfpUtils.cs" />
+    <Compile Include="Protocols\Rtmfp\Session.cs" />
+    <Compile Include="Protocols\Rtmfp\Target.cs" />
+    <Compile Include="Protocols\Rtmfp\Trigger.cs" />
+    <Compile Include="Protocols\Rtmp\AMF0Serializer.cs" />
+    <Compile Include="Protocols\Rtmp\AMF3Serializer.cs" />
+    <Compile Include="Protocols\Rtmfp\InboundRTMFPProtocol.cs" />
+    <Compile Include="Protocols\Rtmp\BaseOutNetRTMPStream.cs" />
+    <Compile Include="Protocols\Rtmp\BaseRTMPAppProtocolHandler.cs" />
+    <Compile Include="Protocols\Rtmp\BaseRTMPProtocol.cs" />
+    <Compile Include="Protocols\Rtmp\Channel.cs" />
+    <Compile Include="Protocols\Rtmp\ConnectionMessageFactory.cs" />
+    <Compile Include="Protocols\Rtmp\GenericMessageFactory.cs" />
+    <Compile Include="Protocols\Rtmp\HeaderType.cs" />
+    <Compile Include="Protocols\Rtmp\InboundRTMPProtocol.cs" />
+    <Compile Include="Protocols\Rtmp\InNetRTMPStream.cs" />
+    <Compile Include="Protocols\Rtmp\OutboundRTMPProtocol.cs" />
+    <Compile Include="Protocols\Rtmp\OutFileRTMPFLVStream.cs" />
+    <Compile Include="Protocols\Rtmp\OutNetRTMP4RTMPStream.cs" />
+    <Compile Include="Protocols\Rtmp\RTMPEProtocol.cs" />
+    <Compile Include="Protocols\Rtmp\RTMPProtocolSerializer.cs" />
+    <Compile Include="Protocols\Rtmp\RTMPStream.cs" />
+    <Compile Include="Protocols\Rtmp\SO.cs" />
+    <Compile Include="Protocols\Rtmp\SOManager.cs" />
+    <Compile Include="Protocols\Rtmp\SOMessageFactory.cs" />
+    <Compile Include="Protocols\Rtmp\StreamMessageFactory.cs" />
+    <Compile Include="Protocols\TCPProtocol.cs" />
+    <Compile Include="Protocols\Timer\BaseTimerProtocol.cs" />
+    <Compile Include="Protocols\UDPProtocol.cs" />
+    <Compile Include="Streaming\BaseInFileStream.cs" />
+    <Compile Include="Streaming\BaseInStream.cs" />
+    <Compile Include="Streaming\BaseOutStream.cs" />
+    <Compile Include="Streaming\BaseStream.cs" />
+    <Compile Include="Streaming\FLVDocument.cs" />
+    <Compile Include="Protocols\Rtmp\InFileRTMPStream.cs" />
+    <Compile Include="Streaming\MP3Document.cs" />
+    <Compile Include="Streaming\StreamCapabilities.cs" />
+    <Compile Include="Streaming\StreamsManager.cs" />
+    <Compile Include="Streaming\StreamTypes.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StreamTypes.tt</DependentUpon>
+    </Compile>
+    <None Include="packages.config" />
+    <None Include="Streaming\StreamTypes.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>StreamTypes.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\源码\Microsoft.IO.RecyclableMemoryStream\src\Microsoft.IO.RecyclableMemoryStream.csproj">
+      <Project>{4b52f0ce-5f4c-43e7-a054-50ca0a502cf3}</Project>
+      <Name>Microsoft.IO.RecyclableMemoryStream</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{ea7e3017-12d1-48c6-a5c0-2ee8276a9894}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="MediaFormats\mp4\group\" />
+    <Folder Include="MediaFormats\mp4\tracks\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+</Project>

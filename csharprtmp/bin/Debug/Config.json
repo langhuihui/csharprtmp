@@ -1,0 +1,37 @@
+﻿   {
+    "rootDirectory": "applications",
+    "applications": [
+        
+        {
+            "name": "cluster",
+             "acceptors": [
+                {
+                    "ip":  "0.0.0.0",
+                    "port": 1112,
+                    "protocol": "cluster"
+                }
+            ]
+        },
+        {
+            "name" :  "Test",
+            "acceptors": [
+                {
+                    "ip":  "0.0.0.0",
+                    "port": 1935,
+                    "protocol": "rtmp"
+                }
+            ]
+        },
+		{
+		"name" :  "live",
+            "acceptors": [
+                {
+                    "ip":  "0.0.0.0",
+                    "port": 1935,
+                    "protocol": "rtmfp"
+                }
+            ]
+		}
+    ]
+}
+   

@@ -1,0 +1,73 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="D:\projects\csharprtmp\Common\bin\Debug\Common.dll" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="CSharpRTMP.Common" #>
+<#@ output extension=".cs" #>
+
+namespace CSharpRTMP.Common
+{
+    public static class ProtocolTypes
+    {
+        //carrier protocols
+        public const ulong PT_TCP = <#= Utils.MakeTag('T', 'C', 'P')#>;
+        public const ulong PT_UDP = <#= Utils.MakeTag('U', 'D', 'P')#>;
+		public const ulong PT_INBOUND_CLUSTER = <#= Utils.MakeTag("IC")#>;
+		public const ulong PT_OUTBOUND_CLUSTER = <#= Utils.MakeTag("OC")#>;
+        //variant protocols
+        public const ulong PT_BIN_VAR = <#= Utils.MakeTag('B', 'V', 'A', 'R')#>;
+        public const ulong PT_XML_VAR = <#= Utils.MakeTag('X', 'V', 'A', 'R')#>;
+        //RTMP protocols
+        public const ulong PT_INBOUND_RTMP = <#= Utils.MakeTag('I', 'R')#>; 
+        public const ulong PT_INBOUND_RTMPS_DISC = <#= Utils.MakeTag('I', 'R', 'S')#>;
+        public const ulong PT_OUTBOUND_RTMP = <#= Utils.MakeTag('O', 'R')#>;
+        public const ulong PT_MONITOR_RTMP = <#= Utils.MakeTag('M', 'R')#>;
+        public const ulong PT_INBOUND_RTMFP = <#= Utils.MakeTag('I', 'R', 'F')#>;
+        public const ulong PT_RTMFP_SESSION = <#= Utils.MakeTag("RP")#>;
+        //encryption protocols
+        public const ulong PT_RTMPE = <#= Utils.MakeTag('R', 'E')#>;
+        public const ulong PT_INBOUND_SSL = <#= Utils.MakeTag('I', 'S', 'S', 'L')#>;
+        public const ulong PT_OUTBOUND_SSL = <#= Utils.MakeTag('O', 'S', 'S', 'L')#>;
+
+        //Async DNS protocols
+        public const ulong PT_INBOUND_DNS = <#= Utils.MakeTag('I', 'D', 'N', 'S')#>;
+        public const ulong PT_OUTBOUND_DNS = <#= Utils.MakeTag('O', 'D', 'N', 'S')#>;
+
+        //MPEG-TS protocol
+        public const ulong PT_INBOUND_TS = <#= Utils.MakeTag('I', 'T', 'S')#>;
+		public const ulong PT_INBOUND_MP4 = <#= Utils.MakeTag("IMP4")#>;
+        //HTTP protocols
+        public const ulong PT_INBOUND_HTTP = <#= Utils.MakeTag('I', 'H', 'T', 'T')#>;
+        public const ulong PT_INBOUND_HTTP_FOR_RTMP = <#= Utils.MakeTag('I', 'H', '4', 'R')#>;
+        public const ulong PT_OUTBOUND_HTTP = <#= Utils.MakeTag('O', 'H', 'T', 'T')#>;
+        public const ulong PT_OUTBOUND_HTTP_FOR_RTMP = <#= Utils.MakeTag('O', 'H', '4', 'R')#>;
+		public const ulong PT_INBOUND_WEBSOCKET = <#= Utils.MakeTag("IWS")#>;
+		public const ulong PT_INBOUND_WEBRTC_SIGNAL = <#= Utils.MakeTag("IWRTCS")#>;
+
+        //Timer protocol
+        public const ulong PT_TIMER = <#= Utils.MakeTag('T', 'M', 'R')#>;
+
+        //Live FLV protocols
+        public const ulong PT_INBOUND_LIVE_FLV = <#= Utils.MakeTag('I', 'L', 'F', 'L')#>;
+        public const ulong PT_OUTBOUND_LIVE_FLV = <#= Utils.MakeTag('O', 'L', 'F', 'L')#>;
+
+        //RTP/RTPS protocols
+        public const ulong PT_RTSP = <#= Utils.MakeTag('R', 'T', 'S', 'P')#>;
+        public const ulong PT_RTCP = <#= Utils.MakeTag('R', 'T', 'C', 'P')#>;
+        public const ulong PT_INBOUND_RTP = <#= Utils.MakeTag('I', 'R', 'T', 'P')#>;
+        public const ulong PT_OUTBOUND_RTP = <#= Utils.MakeTag('O', 'R', 'T', 'P')#>;
+        public const ulong PT_RTP_NAT_TRAVERSAL = <#= Utils.MakeTag('R', 'N', 'A', 'T', 'T')#>;
+
+        //MMS
+        public const ulong PT_OUTBOUND_MMS = <#= Utils.MakeTag('M', 'M', 'S')#>;
+
+        //CLI protocols
+        public const ulong PT_INBOUND_JSONCLI = <#= Utils.MakeTag('I', 'J', 'S', 'O', 'N', 'C', 'L', 'I')#>;
+        public const ulong PT_HTTP_4_CLI = <#= Utils.MakeTag('H', '4', 'C')#>;
+
+        //Raw HTTP stream
+        public const ulong PT_INBOUND_RAW_HTTP_STREAM = <#= Utils.MakeTag('I', 'R', 'H', 'S')#>;
+    }
+}

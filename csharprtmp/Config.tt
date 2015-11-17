@@ -1,0 +1,87 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="$(OutDir)\Common.dll" #>
+<#@ import namespace="System.Diagnostics" #>
+<#@ import namespace="CSharpRTMP.Common" #>
+<#@ output extension=".json" #>
+<# Output();#>
+<#+
+
+private void Output()
+{
+Debug.WriteLine(Utils.IsDebug);
+if(Utils.IsDebug){
+   #>
+   {
+    "rootDirectory": "applications",
+    "applications": [
+        
+        {
+            "name": "cluster",
+             "acceptors": [
+                {
+                    "ip":  "0.0.0.0",
+                    "port": 1112,
+                    "protocol": "cluster"
+                }
+            ]
+        },
+        {
+            "name" :  "Test",
+            "acceptors": [
+                {
+                    "ip":  "0.0.0.0",
+                    "port": 1935,
+                    "protocol": "rtmp"
+                }
+            ]
+        },
+		{
+		"name" :  "live",
+            "acceptors": [
+                {
+                    "ip":  "0.0.0.0",
+                    "port": 1935,
+                    "protocol": "rtmfp"
+                }
+            ]
+		}
+    ]
+}
+   <#+
+   }else{
+   #>
+   {
+    "rootDirectory": "applications",
+    "applications": [
+        
+        {
+            "name": "cluster",
+            "master": "cluster://localhost:1112"
+        },
+        {
+            "name" :  "Test",
+            "acceptors": [
+                {
+                    "ip":  "0.0.0.0",
+                    "port": 1936,
+                    "protocol": "rtmp"
+                }
+            ]
+        },
+		{
+		"name" :  "live",
+            "acceptors": [
+                {
+                    "ip":  "0.0.0.0",
+                    "port": 1935,
+                    "protocol": "rtmfp"
+                }
+            ]
+		}
+        
+    ]
+}
+<#+
+   }
+}
+#>

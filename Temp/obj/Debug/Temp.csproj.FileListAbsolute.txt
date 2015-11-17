@@ -1,0 +1,14 @@
+D:\projects\csharprtmp\Temp\bin\Debug\Temp.exe.config
+D:\projects\csharprtmp\Temp\bin\Debug\Temp.exe
+D:\projects\csharprtmp\Temp\bin\Debug\Temp.pdb
+D:\projects\csharprtmp\Temp\bin\Debug\Common.dll
+D:\projects\csharprtmp\Temp\bin\Debug\System.Threading.Tasks.Dataflow.dll
+D:\projects\csharprtmp\Temp\bin\Debug\Newtonsoft.Json.dll
+D:\projects\csharprtmp\Temp\bin\Debug\Microsoft.IO.RecyclableMemoryStream.dll
+D:\projects\csharprtmp\Temp\bin\Debug\Common.pdb
+D:\projects\csharprtmp\Temp\bin\Debug\System.Threading.Tasks.Dataflow.xml
+D:\projects\csharprtmp\Temp\bin\Debug\Microsoft.IO.RecyclableMemoryStream.pdb
+D:\projects\csharprtmp\Temp\obj\Debug\Temp.csprojResolveAssemblyReference.cache
+D:\projects\csharprtmp\Temp\obj\Debug\Temp.exe
+D:\projects\csharprtmp\Temp\obj\Debug\Temp.pdb
+D:\projects\csharprtmp\Temp\bin\Debug\this.Log.dll

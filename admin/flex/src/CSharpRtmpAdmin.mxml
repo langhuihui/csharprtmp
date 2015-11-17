@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" creationComplete="application1_creationCompleteHandler(event)"
+			   xmlns:s="library://ns.adobe.com/flex/spark" fontFamily="微软雅黑" width="1000"
+			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="955" minHeight="600">
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	<s:layout>
+		<s:VerticalLayout />
+	</s:layout>
+	<s:HGroup verticalAlign="middle" gap="10">
+		<s:TextInput id="server" text="localhost"/>
+		<s:Button label="连接" click="onConnectClick(event)" id="connectBn"/>
+		<s:Label id="serverMode" text='{"服务器模式:"+overallInfo.serverMode+"  内存使用："+(overallInfo.memory/1024/1024).toFixed(2)+"MB cpu使用："+overallInfo.cpu.toFixed(2)+"% 网络：(发送KB/s)"+(overallInfo.bytesSent/1024).toFixed(2)+
+				 "(接收KB/s)"+(overallInfo.bytesReceived/1024).toFixed(2)+"(总共KB/s)"+(overallInfo.bytesTotal/1024).toFixed(2)}'/>
+	</s:HGroup>
+	<s:HGroup height="100%" width="100%" gap="10">
+		<s:List id="appList" height="100%" width="100"/>
+		<mx:TabNavigator height="100%" width="100%">
+			<s:NavigatorContent label="控制面板">
+				<s:layout>
+					<s:VerticalLayout gap="10"/>
+				</s:layout>
+				<s:Label text="{appInfo.servicesInfo}"/>
+				<s:HGroup>
+					<s:Label id="configInfo"/>
+				</s:HGroup>
+			</s:NavigatorContent>
+			<s:NavigatorContent label="用户连接">
+				
+			</s:NavigatorContent>
+			<s:NavigatorContent label="流">
+				<s:HGroup>
+					<s:List id="streams" height="100%"/>
+				</s:HGroup>
+			</s:NavigatorContent>
+			<s:NavigatorContent label="共享对象">
+				
+			</s:NavigatorContent>
+		</mx:TabNavigator>
+	</s:HGroup>
+	<fx:Script>
+		<![CDATA[
+			import flash.utils.clearInterval;
+			import flash.utils.setInterval;
+			
+			import mx.collections.ArrayList;
+			import mx.events.FlexEvent;
+			
+			public var nc:NetConnection = new NetConnection();
+			private var interval:uint;
+			[Bindable]
+			public var overallInfo:Object;
+			[Bindable]
+			public var appInfo:Object;
+			protected function onConnectClick(event:MouseEvent):void
+			{
+				if(nc.connected){
+					nc.close();
+					connectBn.label="连接";
+					clearInterval(interval);
+				}else{
+					nc.connect("rtmp://"+server.text+":1111/admin");
+				}
+			}
+			
+			protected function application1_creationCompleteHandler(event:FlexEvent):void
+			{
+				nc.addEventListener(NetStatusEvent.NET_STATUS,onNetStatus);
+				nc.client = this;
+			}
+			
+			protected function onNetStatus(event:NetStatusEvent):void
+			{
+				switch(event.info.code){
+					case "NetConnection.Connect.Success":
+						connectBn.label="断开";
+						getOverAll();
+						interval = setInterval(getOverAll,5000);
+//						nc.call("test",new Responder(function(result:Object){
+//							trace(result.catagory);
+//						},function(state:Object){
+//							trace(state);
+//						}));
+						break;
+				}
+			}
+			public function getOverAll():void{
+				nc.call("getOverall",new Responder(function(result:Object){
+					overallInfo = result;
+					appList.dataProvider = new ArrayList(result.appList);
+				}));
+				if(appList.selectedIndex!=-1){
+					nc.call("getAppInfo",new Responder(function(result:Object){
+						appInfo = result;
+						for(var i in appInfo.config){
+							configInfo.text+=i+":"+appInfo.config[i]+"\r\n";
+						}
+						streams.dataProvider = new ArrayList(appInfo.streams);
+					}),appList.selectedItem);
+				}
+			}
+			public function onBWDone(arg:Object):void{
+			}
+		]]>
+	</fx:Script>
+</s:Application>

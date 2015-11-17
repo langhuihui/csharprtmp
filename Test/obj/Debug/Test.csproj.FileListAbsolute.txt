@@ -1,0 +1,7 @@
+D:\projects\csharprtmp\csharprtmp\bin\Debug\applications\Test\Test.dll
+D:\projects\csharprtmp\csharprtmp\bin\Debug\applications\Test\Test.pdb
+D:\projects\csharprtmp\bin\Debug\applications\Test\Test.dll
+D:\projects\csharprtmp\bin\Debug\applications\Test\Test.pdb
+D:\projects\csharprtmp\Test\obj\Debug\Test.csprojResolveAssemblyReference.cache
+D:\projects\csharprtmp\Test\obj\Debug\Test.dll
+D:\projects\csharprtmp\Test\obj\Debug\Test.pdb

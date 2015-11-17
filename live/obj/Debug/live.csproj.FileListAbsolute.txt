@@ -1,0 +1,7 @@
+D:\projects\csharprtmp\csharprtmp\bin\Debug\applications\live\live.dll
+D:\projects\csharprtmp\csharprtmp\bin\Debug\applications\live\live.pdb
+D:\projects\csharprtmp\bin\Debug\applications\live\live.dll
+D:\projects\csharprtmp\bin\Debug\applications\live\live.pdb
+D:\projects\csharprtmp\live\obj\Debug\live.csprojResolveAssemblyReference.cache
+D:\projects\csharprtmp\live\obj\Debug\live.dll
+D:\projects\csharprtmp\live\obj\Debug\live.pdb
