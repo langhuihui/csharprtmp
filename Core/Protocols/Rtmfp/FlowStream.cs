@@ -27,6 +27,7 @@ namespace CSharpRTMP.Core.Protocols.Rtmfp
         private OutNetRtmfpStream _listener;
         public IOutStream OutStream;
         public long TotalBytes;
+        private bool _firstKeyFrame;
         public event Action<Variant> OnStatus;
         public FlowStream(ulong id, string signature, Peer peer, BaseRtmfpProtocol handler, Session band,FlowWriter localFlow)
             : base(id, signature, _Name, peer, handler, band, localFlow)
@@ -72,18 +73,26 @@ namespace CSharpRTMP.Core.Protocols.Rtmfp
         }
         protected override void VideoHandler(Stream packet)
         {
+            var time = packet.ReadUInt();
+            var length = (uint)packet.GetAvaliableByteCounts();
+            if (_numberLostFragments > 0)
+                _firstKeyFrame = false;
+            if ((packet.ReadByte() & 0xF0) == 0x10)
+                _firstKeyFrame = true;
+            packet.Position--;
+            if (!_firstKeyFrame)
+            {
+                //丢失关键帧
+                return;
+            }
+            _numberLostFragments = 0;
             if (_publisher != null && _publisher.PublisherId == StreamId)
             {
-                var time = packet.ReadUInt();
-                var length = (uint)packet.GetAvaliableByteCounts();
                 //_publication.PushVideoPacket(packet.ReadUInt32(),packet,_numberLostFragments);
                 _publisher.FeedData(packet, length, 0, length, time, false);
-                _numberLostFragments = 0;
             }
             else if (OutStream != null)
             {
-                var time = packet.ReadUInt();
-                var length = (uint)packet.GetAvaliableByteCounts();
                 TotalBytes += length;
                 OutStream.FeedData(packet, length, 0, length, time, false);
             }
@@ -106,7 +115,7 @@ namespace CSharpRTMP.Core.Protocols.Rtmfp
 
         protected override void LostFragmentsHandler(uint count)
         {
-            if (_publisher != null) _numberLostFragments += count;
+            _numberLostFragments += count;
             base.LostFragmentsHandler(count);
         }
 

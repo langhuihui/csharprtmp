@@ -132,7 +132,7 @@ namespace Core.Protocols.Rtmp
                 }
                 _lastVideoTime = absoluteTimestamp;
             }
-            Logger.INFO("{0}", _videoBytesCount);
+            //Logger.INFO("{0}", _videoBytesCount);
             return base.FeedData(pData,dataLength,processedLength,totalLength,absoluteTimestamp,isAudio);
         }
 

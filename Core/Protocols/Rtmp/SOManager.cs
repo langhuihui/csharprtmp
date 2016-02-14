@@ -41,8 +41,8 @@ namespace CSharpRTMP.Core.Protocols.Rtmp
 
         public bool Process(BaseRTMPProtocol pFrom, Variant request)
         {
-            string name = request [ Defines.RM_SHAREDOBJECT][Defines.RM_SHAREDOBJECT_NAME];
-            var so = this[name, request[Defines.RM_SHAREDOBJECT][Defines.RM_SHAREDOBJECT_PERSISTENCE]];
+            string name = request [ Defines.RM_SHAREDOBJECT,Defines.RM_SHAREDOBJECT_NAME];
+            var so = this[name, request[Defines.RM_SHAREDOBJECT,Defines.RM_SHAREDOBJECT_PERSISTENCE]];
             var ps = request[Defines.RM_SHAREDOBJECT,Defines.RM_SHAREDOBJECT_PRIMITIVES];
             if(ps != null)
             for (var i = 0; i < ps.Count; i++)
@@ -81,7 +81,7 @@ namespace CSharpRTMP.Core.Protocols.Rtmp
         private bool ProcessSharedObjectPrimitive(BaseRTMPProtocol pFrom, SO pSO, string name, Variant request,
             int primitiveId)
         {
-            var primitive = request[Defines.RM_SHAREDOBJECT][Defines.RM_SHAREDOBJECT_PRIMITIVES][ primitiveId];
+            var primitive = request[Defines.RM_SHAREDOBJECT,Defines.RM_SHAREDOBJECT_PRIMITIVES][ primitiveId];
             switch ((byte)primitive[Defines.RM_SHAREDOBJECTPRIMITIVE_TYPE])
             {
                 case Defines.SOT_CS_CONNECT:
@@ -103,6 +103,9 @@ namespace CSharpRTMP.Core.Protocols.Rtmp
                     {
                         pSO.Set(item.Key, item.Value.Clone(), pFrom);
                     }
+                    return true;
+                case Defines.SOT_BW_SEND_MESSAGE:
+                    pSO?.Send(primitive, pFrom);
                     return true;
                 default:
                     Logger.FATAL("SO primitive not allowed here");

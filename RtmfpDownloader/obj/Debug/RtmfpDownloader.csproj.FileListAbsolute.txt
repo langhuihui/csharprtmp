@@ -4,7 +4,6 @@ D:\projects\csharprtmp\RtmfpDownloader\bin\Debug\RtmfpDownloader.pdb
 D:\projects\csharprtmp\RtmfpDownloader\bin\Debug\Common.dll
 D:\projects\csharprtmp\RtmfpDownloader\bin\Debug\Core.dll
 D:\projects\csharprtmp\RtmfpDownloader\bin\Debug\log4net.dll
-D:\projects\csharprtmp\RtmfpDownloader\bin\Debug\this.Log-log4net.dll
 D:\projects\csharprtmp\RtmfpDownloader\bin\Debug\this.Log.dll
 D:\projects\csharprtmp\RtmfpDownloader\bin\Debug\Newtonsoft.Json.dll
 D:\projects\csharprtmp\RtmfpDownloader\bin\Debug\Microsoft.IO.RecyclableMemoryStream.dll

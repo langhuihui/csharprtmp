@@ -27,7 +27,7 @@ namespace CSharpRTMP
             LoggingExtensions.Logging.Log.InitializeWith<LoggingExtensions.log4net.Log4NetLog>();
 
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-            
+            _configFile.Log().Info("Server Start!");
             if (!_configFile.LoadConfigFile())
             {
                 Logger.FATAL("Unable to load ConfigFile!");

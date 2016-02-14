@@ -96,6 +96,7 @@ namespace CSharpRTMP.Core.Protocols
 #if HAS_PROTOCOL_HTTP
 	Defines.CONF_PROTOCOL_INBOUND_RTMPS,
     Defines.CONF_PROTOCOL_INBOUND_RTMPT,
+    Defines.CONF_PROTOCOL_INBOUND_WS_RTMP,
 #endif 
 #endif 
 #if HAS_PROTOCOL_TS
@@ -193,6 +194,11 @@ namespace CSharpRTMP.Core.Protocols
                     result.Add(ProtocolTypes.PT_TCP);
                     result.Add(ProtocolTypes.PT_INBOUND_HTTP);
                     result.Add(ProtocolTypes.PT_INBOUND_HTTP_FOR_RTMP);
+                    break;
+                case Defines.CONF_PROTOCOL_INBOUND_WS_RTMP:
+                    result.Add(ProtocolTypes.PT_TCP);
+                    result.Add(ProtocolTypes.PT_INBOUND_WEBSOCKET);
+                    result.Add(ProtocolTypes.PT_INBOUND_RTMP);
                     break;
                 case Defines.CONF_PROTOCOL_INBOUND_WEBRTC:
                     result.Add(ProtocolTypes.PT_TCP);

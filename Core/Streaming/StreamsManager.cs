@@ -250,8 +250,8 @@ namespace CSharpRTMP.Core.Streaming
                 var capabilities = new StreamCapabilities();
                 var originalServerFullPath = (string)result[Defines.META_SERVER_FULL_PATH];
                 regenerateFiles =
-                (new FileInfo(metaPath).LastWriteTime < new FileInfo((string)result[Defines.META_SERVER_FULL_PATH]).LastWriteTime)
-                || (new FileInfo(seekPath).LastWriteTime < new FileInfo((string)result[Defines.META_SERVER_FULL_PATH]).LastWriteTime)
+                (new FileInfo(metaPath).LastWriteTime < new FileInfo(result[Defines.META_SERVER_FULL_PATH]).LastWriteTime)
+                || (new FileInfo(seekPath).LastWriteTime < new FileInfo(result[Defines.META_SERVER_FULL_PATH]).LastWriteTime)
                 || !Variant.DeserializeFromFile(metaPath, out result)
                 || (!StreamCapabilities.Deserialize(seekPath, capabilities));
                 regenerateFiles |=

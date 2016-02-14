@@ -175,13 +175,14 @@ namespace CSharpRTMP.Core.Streaming
                     break;
                 }
 
-                //13. We are not interested in the previous tag size
-                if (!MediaFile.SeekAhead(4))
-                {
-                    Logger.WARN("Unable to seek in file");
-                    break;
-                }
 
+                //13. We are not interested in the previous tag size
+                //if (!MediaFile.SeekAhead(4))
+                //{
+                //    Logger.WARN("Unable to seek in file");
+                //    break;
+                //}
+                var preTagSize = MediaFile.Br.ReadInt32();
                 //14. Store it in the proper location and adjust the timestamp accordingly
                 if (frame.IsBinaryHeader)
                 {
@@ -196,7 +197,7 @@ namespace CSharpRTMP.Core.Streaming
 
                 }
             }
-            _frames.Sort(CompareFrames);
+            //_frames.Sort(CompareFrames);
 
             //15. Add the binary headers
             _frames.InsertRange(0, binaryHeaders);

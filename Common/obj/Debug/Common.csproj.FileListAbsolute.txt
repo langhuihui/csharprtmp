@@ -7,6 +7,5 @@ D:\projects\csharprtmp\Common\obj\Debug\Common.csprojResolveAssemblyReference.ca
 D:\projects\csharprtmp\Common\obj\Debug\Common.dll
 D:\projects\csharprtmp\Common\obj\Debug\Common.pdb
 D:\projects\csharprtmp\Common\bin\Debug\log4net.dll
-D:\projects\csharprtmp\Common\bin\Debug\this.Log-log4net.dll
 D:\projects\csharprtmp\Common\bin\Debug\this.Log.dll
 D:\projects\csharprtmp\Common\bin\Debug\log4net.xml

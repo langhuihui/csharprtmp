@@ -292,8 +292,8 @@ namespace CSharpRTMP.Common
 		public const string CONF_PROTOCOL_INBOUND_RTMPT = "rtmpt";
 		//public const int CONF_PROTOCOL_INBOUND_RTMPT_LEN = 12;
 	    public const string CONF_PROTOCOL_INBOUND_RTMFP = "rtmfp";
-
-	    public const string CONF_PROTOCOL_INBOUND_WEBRTC = "webrtc";
+        public const string CONF_PROTOCOL_INBOUND_WS_RTMP = "wsrtmp";
+        public const string CONF_PROTOCOL_INBOUND_WEBRTC = "webrtc";
 	    public const string CONF_PROTOCOL_INBOUND_MP4 = "mp4";
 	    public const string CONF_PROTOCOL_INBOUND_CLUSTER = "cluster";
         public const string CONF_PROTOCOL_OUTBOUND_CLUSTER = "outboundCluster";

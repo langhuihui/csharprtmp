@@ -29,9 +29,9 @@ namespace Core.Protocols.Rtmp
         {
             switch (_rtmpState)
             {
-                    case RTMPState.RTMP_STATE_NOT_INITIALIZED:
+               case RTMPState.RTMP_STATE_NOT_INITIALIZED:
                     return PerformHandshakeStage1((string)CustomParameters[Defines.CONF_PROTOCOL] == Defines.CONF_PROTOCOL_OUTBOUND_RTMPE);
-                    case RTMPState.RTMP_STATE_CLIENT_REQUEST_SENT:
+               case RTMPState.RTMP_STATE_CLIENT_REQUEST_SENT:
                     if (buffer.AvaliableByteCounts < 3073) return true;
                     _usedScheme = (byte) ((string) CustomParameters[Defines.CONF_PROTOCOL] ==
                                           Defines.CONF_PROTOCOL_OUTBOUND_RTMPE? 1: 0);

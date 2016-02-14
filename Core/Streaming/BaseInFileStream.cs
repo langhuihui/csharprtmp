@@ -75,30 +75,30 @@ namespace CSharpRTMP.Core.Streaming
             {
 
             }
-#if HAS_MEDIFLV
-            else if ((string)metaData[METMEDIA_TYPE] == MEDIA_TYPE_FLV ||
-            (string)metaData[METMEDIA_TYPE] == MEDIA_TYPE_LIVE_OR_FLV)
+#if HAS_MEDIA_FLV
+            else if ((string)metaData[META_MEDIA_TYPE] == MEDIA_TYPE_FLV ||
+            (string)metaData[META_MEDIA_TYPE] == MEDIA_TYPE_LIVE_OR_FLV)
             {
                 pDocument = new FLVDocument(metaData);
             }
 #endif
-#if HAS_MEDIMP3
-            else if ((string)metaData[METMEDIA_TYPE] == MEDIA_TYPE_MP3)
+#if HAS_MEDIA_MP3
+            else if ((string)metaData[META_MEDIA_TYPE] == MEDIA_TYPE_MP3)
             {
                 pDocument = new MP3Document(metaData);
             }
 #endif
-#if HAS_MEDIMP4
-            else if ((string)metaData[METMEDIA_TYPE] == MEDIA_TYPE_MP4
-            || (string)metaData[METMEDIA_TYPE] == MEDIA_TYPE_M4A
-            || (string)metaData[METMEDIA_TYPE] == MEDIA_TYPE_M4V
-            || (string)metaData[METMEDIA_TYPE] == MEDIA_TYPE_MOV
-            || (string)metaData[METMEDIA_TYPE] == MEDIA_TYPE_F4V)
+#if HAS_MEDIA_MP4
+            else if ((string)metaData[META_MEDIA_TYPE] == MEDIA_TYPE_MP4
+            || (string)metaData[META_MEDIA_TYPE] == MEDIA_TYPE_M4A
+            || (string)metaData[META_MEDIA_TYPE] == MEDIA_TYPE_M4V
+            || (string)metaData[META_MEDIA_TYPE] == MEDIA_TYPE_MOV
+            || (string)metaData[META_MEDIA_TYPE] == MEDIA_TYPE_F4V)
             {
                 pDocument = new MP4Document(metaData);
             }
 #endif
-#if HAS_MEDINSV
+#if HAS_MEDIA_NSV
 	else if (metaData[Defines.META_MEDIA_TYPE] == Defines.MEDIA_TYPE_NSV) {
 		pDocument = new NSVDocument(metaData);
 	}
@@ -571,8 +571,15 @@ namespace CSharpRTMP.Core.Streaming
 
             public override bool TimePeriodElapsed()
             {
-                _pInFileStream?.ReadyForSend();
-                return true;
+                try
+                {
+                    _pInFileStream?.ReadyForSend();
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
             }
         }
     }

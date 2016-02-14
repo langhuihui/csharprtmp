@@ -13,3 +13,5 @@ D:\projects\csharprtmp\Core\obj\Debug\Core.csprojResolveAssemblyReference.cache
 D:\projects\csharprtmp\Core\obj\Debug\Core.dll
 D:\projects\csharprtmp\Core\obj\Debug\Core.pdb
 D:\projects\csharprtmp\Core\bin\Debug\this.Log.dll
+D:\projects\csharprtmp\Core\bin\Debug\log4net.dll
+D:\projects\csharprtmp\Core\bin\Debug\log4net.xml

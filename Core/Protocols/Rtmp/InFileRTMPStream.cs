@@ -35,8 +35,8 @@ namespace Core.Protocols.Rtmp
         class AVCBuilder : BaseBuilder
         {
             readonly byte[] _videoCodecHeaderInit = { 0x17, 0, 0, 0, 0 };
-            readonly byte[] _videoCodecHeaderKeyFrame = { 0x17, 0 };
-            readonly byte[] _videoCodecHeader = { 0x17, 0 };
+            readonly byte[] _videoCodecHeaderKeyFrame = { 0x17, 1 };
+            readonly byte[] _videoCodecHeader = { 0x27, 1 };
             public override bool BuildFrame(MediaFile file, MediaFrame mediaFrame, Stream buffer)
             {
                
@@ -99,7 +99,7 @@ namespace Core.Protocols.Rtmp
 
  
         string _metadataName;
-        Variant _metadataParameters;
+        Variant _metadataParameters = Variant.Get();
 
         public Variant CompleteMetadata;
         public InFileRTMPStream(BaseProtocol pProtocol, StreamsManager pStreamsManager, string name) : base(pProtocol, pStreamsManager, name)

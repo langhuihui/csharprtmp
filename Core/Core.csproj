@@ -258,7 +258,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\源码\Microsoft.IO.RecyclableMemoryStream\src\Microsoft.IO.RecyclableMemoryStream.csproj">
+    <ProjectReference Include="..\..\..\OpenSource\Microsoft.IO.RecyclableMemoryStream\src\Microsoft.IO.RecyclableMemoryStream.csproj">
       <Project>{4b52f0ce-5f4c-43e7-a054-50ca0a502cf3}</Project>
       <Name>Microsoft.IO.RecyclableMemoryStream</Name>
     </ProjectReference>

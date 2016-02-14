@@ -6,3 +6,7 @@ D:\projects\csharprtmp\Common\obj\Release\Common.dll
 D:\projects\csharprtmp\Common\obj\Release\Common.pdb
 D:\projects\csharprtmp\Common\bin\Release\Microsoft.IO.RecyclableMemoryStream.dll
 D:\projects\csharprtmp\Common\bin\Release\Microsoft.IO.RecyclableMemoryStream.pdb
+D:\projects\csharprtmp\Common\bin\Release\log4net.dll
+D:\projects\csharprtmp\Common\bin\Release\this.Log-log4net.dll
+D:\projects\csharprtmp\Common\bin\Release\this.Log.dll
+D:\projects\csharprtmp\Common\bin\Release\log4net.xml

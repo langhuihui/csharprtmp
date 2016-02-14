@@ -140,6 +140,19 @@ namespace CSharpRTMP.Core.Protocols.Rtmp
             }
             _versionIncremented = false;
         }
+        public void Send(Variant primitive,BaseProtocol from)
+        {
+            foreach (var listener in _dirtyPropsByProtocol.Keys)
+            {
+                if(from == listener)continue;
+                var primitives = Variant.Get();
+                primitives[0] = primitive.Clone();
+                if (listener is BaseClusterProtocol)
+                    (listener as BaseClusterProtocol).SharedObjectTrack(Application, Name, Version, IsPersistent, primitives);
+                else
+                    listener.Application.SharedObjectTrack(listener, Name, Version, IsPersistent, primitives);
+            }
+        }
         public void RegisterProtocol(BaseProtocol protocol)
         {
             _dirtyPropsByProtocol[protocol] = new List<DirtyInfo>();
@@ -165,6 +178,7 @@ namespace CSharpRTMP.Core.Protocols.Rtmp
             //}
         }
 
+        public IEnumerable<BaseProtocol> Listeners => _dirtyPropsByProtocol.Keys; 
         public bool UnRegisterProtocol(BaseProtocol protocol)
         {
             List<DirtyInfo> dirtyInfo;
@@ -179,7 +193,8 @@ namespace CSharpRTMP.Core.Protocols.Rtmp
                 else Set(key, value);
             }
         }
-      
+
+        
         public Variant Set(string key, Variant value, BaseProtocol pFrom = null)
         {
             if (value == null || value == VariantType.Null)

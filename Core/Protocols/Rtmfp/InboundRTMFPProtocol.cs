@@ -81,6 +81,7 @@ namespace CSharpRTMP.Core.Protocols.Rtmfp
             //    Connections[address].Start();
             //}
             //Connections[address].EnqueueForOutbound(OutputBuffer);
+
             var reader = inputStream.Reader;
             var id = reader.ReadUInt32() ^ reader.ReadUInt32() ^ reader.ReadUInt32();
             reader.BaseStream.Position = 4;

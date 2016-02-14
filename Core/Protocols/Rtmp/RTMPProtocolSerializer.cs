@@ -122,13 +122,14 @@ namespace CSharpRTMP.Core.Protocols.Rtmp
                              GetSOPrimitiveString(primitive[Defines.RM_SHAREDOBJECTPRIMITIVE_TYPE]);
                         uint rawLength = 0;
                         primitive[Defines.RM_SHAREDOBJECTPRIMITIVE_RAWLENGTH] = rawLength = _amf0.ReadUInt32();
+                        long read;
                         switch ((byte)primitive[Defines.RM_SHAREDOBJECTPRIMITIVE_TYPE])
                         {
                             case Defines.SOT_CS_CONNECT:
                             case Defines.SOT_CS_DISCONNECT:
                                 break;
                             case Defines.SOT_CS_SET_ATTRIBUTE:
-                                long read = 0;
+                                read = 0;
                                 while (read < rawLength)
                                 {
                                     var afterRead = stream.Position;
@@ -147,6 +148,11 @@ namespace CSharpRTMP.Core.Protocols.Rtmp
                                 //    read += stream.Position - afterRead;
                                 //    primitive[Defines.RM_SHAREDOBJECTPRIMITIVE_PAYLOAD].Add(key);
                                 //}
+                                break;
+                            case Defines.SOT_BW_SEND_MESSAGE:
+                                primitive[Defines.RM_SHAREDOBJECTPRIMITIVE_PAYLOAD] = Variant.Get();
+                                while (_amf0.Available)
+                                    primitive[Defines.RM_SHAREDOBJECTPRIMITIVE_PAYLOAD].Add(_amf0.ReadVariant());
                                 break;
                             default:
                                 Logger.FATAL("Invalid SO primitive type. Partial result:{0}",messageBody.ToString());
@@ -295,7 +301,7 @@ namespace CSharpRTMP.Core.Protocols.Rtmp
                                     writer.Write(0);
                                     break;
                                 case Defines.SOT_SC_DELETE_DATA:
-                            case Defines.SOT_SC_UPDATE_DATA_ACK:
+                                case Defines.SOT_SC_UPDATE_DATA_ACK:
                                     rawLengthPosition = InternalBuffer.Position;
                                     writer.Write(0);
                                     foreach (var item in primitive[Defines.RM_SHAREDOBJECTPRIMITIVE_PAYLOAD].Children)
@@ -305,6 +311,19 @@ namespace CSharpRTMP.Core.Protocols.Rtmp
                                     writer.Write((uint) length);
                                     InternalBuffer.Seek(0, SeekOrigin.End);
                                     break;
+                            case Defines.SOT_BW_SEND_MESSAGE:
+                                rawLengthPosition = InternalBuffer.Position;
+                                writer.Write(0);
+                                if (primitive[Defines.RM_SHAREDOBJECTPRIMITIVE_PAYLOAD] == null) break;
+                                foreach (var item in primitive[Defines.RM_SHAREDOBJECTPRIMITIVE_PAYLOAD].Children)
+                                {
+                                    writer.WriteVariant(item.Value);
+                                }
+                                length = InternalBuffer.Position - rawLengthPosition - 4;
+                                InternalBuffer.Seek(rawLengthPosition, SeekOrigin.Begin);
+                                writer.Write((uint)length);
+                                InternalBuffer.Seek(0, SeekOrigin.End);
+                                break;
                             }
                         }
                         break;

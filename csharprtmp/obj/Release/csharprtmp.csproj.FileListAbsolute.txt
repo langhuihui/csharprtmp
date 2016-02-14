@@ -8,7 +8,6 @@ D:\projects\csharprtmp\csharprtmp\bin\Release\Common.pdb
 D:\projects\csharprtmp\csharprtmp\bin\Release\Core.pdb
 D:\projects\csharprtmp\csharprtmp\obj\Release\csharprtmp.exe
 D:\projects\csharprtmp\csharprtmp\obj\Release\csharprtmp.pdb
-D:\projects\csharprtmp\bin\Release\Config.json
 D:\projects\csharprtmp\bin\Release\csharprtmp.exe
 D:\projects\csharprtmp\bin\Release\csharprtmp.pdb
 D:\projects\csharprtmp\csharprtmp\obj\Release\csharprtmp.csprojResolveAssemblyReference.cache

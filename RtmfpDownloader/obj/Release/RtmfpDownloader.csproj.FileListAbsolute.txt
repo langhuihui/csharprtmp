@@ -23,3 +23,7 @@ D:\projects\csharprtmp\RtmfpDownloader\obj\Release\RtmfpDownloader.Properties.Re
 D:\projects\csharprtmp\RtmfpDownloader\obj\Release\RtmfpDownloader.csproj.GenerateResource.Cache
 D:\projects\csharprtmp\RtmfpDownloader\obj\Release\RtmfpDownloader.exe
 D:\projects\csharprtmp\RtmfpDownloader\obj\Release\RtmfpDownloader.pdb
+D:\projects\csharprtmp\RtmfpDownloader\bin\Release\log4net.dll
+D:\projects\csharprtmp\RtmfpDownloader\bin\Release\this.Log-log4net.dll
+D:\projects\csharprtmp\RtmfpDownloader\bin\Release\this.Log.dll
+D:\projects\csharprtmp\RtmfpDownloader\bin\Release\log4net.xml

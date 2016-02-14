@@ -95,7 +95,7 @@ namespace CSharpRTMP.Core.MediaFormats
 		        var minutes = (totalSeconds - hours * 3600) / 60;
 		        var seconds = (totalSeconds - hours * 3600 - minutes * 60);
 		        Logger.INFO("File size: {0} bytes; Duration: {1}:{2}:{3} ({4} sec); Optimal bandwidth: {5} kb/s",
-				        MediaFile.FileInfo.Length,
+				        MediaFile.Length,
 				        hours, minutes, seconds,
 				        totalSeconds,
 				        _streamCapabilities.BandwidthHint);
@@ -111,7 +111,7 @@ namespace CSharpRTMP.Core.MediaFormats
 
         public static int CompareFrames(MediaFrame frame1,MediaFrame frame2)
         {
-            return (int) (frame1.AbsoluteTime == frame2.AbsoluteTime
+            return (int) (frame1.AbsoluteTime == frame2.AbsoluteTime || (frame1.AbsoluteTime == 0 || frame2.AbsoluteTime == 0)
                 ? frame1.Start - frame2.Start
                 : frame1.AbsoluteTime - frame2.AbsoluteTime);
         }
@@ -151,6 +151,7 @@ namespace CSharpRTMP.Core.MediaFormats
             ulong maxFrameSize = 0;
             foreach (var mediaFrame in _frames)
             {
+               
                 if (maxFrameSize < mediaFrame.Length) maxFrameSize = mediaFrame.Length;
                 hasVideo |= mediaFrame.Type == MediaFrameType.Video;
                 seekFile.Bw.Write(mediaFrame.GetBytes());
@@ -206,11 +207,17 @@ namespace CSharpRTMP.Core.MediaFormats
             MetaData[Defines.META_AUDIO_FRAMES_COUNT] = _audioSamplesCount;
             MetaData[Defines.META_VIDEO_FRAMES_COUNT] = _videoSamplesCount;
             MetaData[Defines.META_TOTAL_FRAMES_COUNT] = _frames.Count;
-
             MetaData[Defines.META_FILE_SIZE] = MediaFile.Length;
             if (_frames.Count > 0)
             {
-                MetaData[Defines.META_FILE_DURATION] = _frames[_frames.Count - 1].AbsoluteTime;
+                for (int i = _frames.Count - 1; i > 0; i--)
+                {
+                    if (_frames[i].AbsoluteTime != 0)
+                    {
+                        MetaData[Defines.META_FILE_DURATION] = _frames[i].AbsoluteTime;
+                        break;
+                    }
+                }
                 MetaData[Defines.META_FILE_BANDWIDTH] = _streamCapabilities.BandwidthHint;
             }
             else

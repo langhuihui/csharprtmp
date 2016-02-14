@@ -63,8 +63,8 @@ namespace CSharpRTMP.Core.Protocols.Rtmp
         }
         public uint Timestamp
         {
-            set { Header.Timstamp = value; }
-            get { return Header.Timstamp; }
+            set { Header.TimeStramp = value; }
+            get { return Header.TimeStramp; }
         }
 
         public bool Isabsolute
@@ -77,7 +77,7 @@ namespace CSharpRTMP.Core.Protocols.Rtmp
     {
         public uint ChannelId;
         public byte HeaderType;
-        public uint Timstamp;
+        public uint TimeStramp;
         public uint MessageLength;
         public byte MessageType;
         public uint StreamId;
@@ -89,7 +89,7 @@ namespace CSharpRTMP.Core.Protocols.Rtmp
         {
             HeaderType = ht;
             ChannelId = ci;
-            Timstamp = ts;
+            TimeStramp = ts;
             MessageLength = ml;
             MessageType = mt;
             StreamId = si;
@@ -112,12 +112,12 @@ namespace CSharpRTMP.Core.Protocols.Rtmp
                         ReadCompleted = false;
                         return true;
                     }
-                    Timstamp = reader.ReadU24();
+                    TimeStramp = reader.ReadU24();
                     MessageLength = reader.ReadU24();
                     MessageType = (byte) buffer.ReadByte();
                     //StreamId = ((uint)buffer.ReadByte()) | ((uint)buffer.ReadByte() << 8) | ((uint)buffer.ReadByte() << 16) | ((uint)buffer.ReadByte() << 24);
                     StreamId = reader._ReadUInt32();
-                    if (Timstamp == 0x00ffffff)
+                    if (TimeStramp == 0x00ffffff)
                     {
                         Skip4Bytes = true;
                         if (availableBytes < 15)
@@ -125,7 +125,7 @@ namespace CSharpRTMP.Core.Protocols.Rtmp
                             ReadCompleted = false;
                             return true;
                         }
-                        Timstamp = reader.ReadUInt32();
+                        TimeStramp = reader.ReadUInt32();
                         ReadCompleted = true;
                         return true;
                     }
@@ -139,14 +139,14 @@ namespace CSharpRTMP.Core.Protocols.Rtmp
                         ReadCompleted = false;
                         return true;
                     }
-                    Timstamp = reader.ReadU24();
+                    TimeStramp = reader.ReadU24();
                     MessageLength = reader.ReadU24();
                     MessageType = (byte) buffer.ReadByte();
                     //buffer.Read(temp, 1, 7);
                     //hf.datac = temp;
                     //ts = (uint)IPAddress.NetworkToHostOrder((int)ts) & 0x00ffffff;
                     //ml = (uint)IPAddress.NetworkToHostOrder((int)ml) >>8;
-                    if (Timstamp == 0x00ffffff)
+                    if (TimeStramp == 0x00ffffff)
                     {
                         Skip4Bytes = true;
                         if (availableBytes < 11)
@@ -154,7 +154,7 @@ namespace CSharpRTMP.Core.Protocols.Rtmp
                             ReadCompleted = false;
                             return true;
                         }
-                        Timstamp = reader.ReadUInt32();
+                        TimeStramp = reader.ReadUInt32();
                         ReadCompleted = true;
                         return true;
                     }
@@ -168,12 +168,12 @@ namespace CSharpRTMP.Core.Protocols.Rtmp
                         ReadCompleted = false;
                         return true;
                     }
-                    Timstamp = reader.ReadU24();
+                    TimeStramp = reader.ReadU24();
                     //buffer.Read(temp, 1, 3);
                     //hf.datac = temp;
                     //ts = (uint)IPAddress.NetworkToHostOrder((int)ts) & 0x00ffffff;
 
-                    if (Timstamp == 0x00ffffff)
+                    if (TimeStramp == 0x00ffffff)
                     {
                         Skip4Bytes = true;
                         if (availableBytes < 7)
@@ -181,7 +181,7 @@ namespace CSharpRTMP.Core.Protocols.Rtmp
                             ReadCompleted = false;
                             return true;
                         }
-                        Timstamp = reader.ReadUInt32();
+                        TimeStramp = reader.ReadUInt32();
                         ReadCompleted = true;
                         return true;
                     }
@@ -199,7 +199,8 @@ namespace CSharpRTMP.Core.Protocols.Rtmp
         }
 
         public bool Write(Channel channel, Stream writer)
-        {
+        { 
+            
             if (channel.lastOutStreamId == StreamId)
             {
                 if (IsAbsolute)
@@ -207,7 +208,7 @@ namespace CSharpRTMP.Core.Protocols.Rtmp
                     if (channel.lastOutProcBytes == 0)
                     {
                         HeaderType = HT_FULL;
-                        channel.lastOutAbsTs = Timstamp;
+                        channel.lastOutAbsTs = TimeStramp;
                     }
                     else
                     {
@@ -222,12 +223,12 @@ namespace CSharpRTMP.Core.Protocols.Rtmp
                         if (MessageType == channel.lastOutHeader.MessageType && MessageLength == channel.lastOutHeader.MessageLength)
                         {
                             HeaderType = HT_SAME_LENGTH_AND_STREAM;
-                            if (Timstamp == channel.lastOutHeader.Timstamp)
+                            if (TimeStramp == channel.lastOutHeader.TimeStramp)
                             {
                                 HeaderType = HT_CONTINUATION;
                             }
                         }
-                        channel.lastOutAbsTs += Timstamp;
+                        channel.lastOutAbsTs += TimeStramp;
                     }
                     else
                     {
@@ -239,9 +240,10 @@ namespace CSharpRTMP.Core.Protocols.Rtmp
             {
                 HeaderType = HT_FULL;
                 IsAbsolute = true;
-                channel.lastOutAbsTs = Timstamp;
+                channel.lastOutAbsTs = TimeStramp;
                 channel.lastOutStreamId = StreamId;
             }
+            
             channel.lastOutHeader = this;
             return Write(writer);
         }
@@ -269,22 +271,22 @@ namespace CSharpRTMP.Core.Protocols.Rtmp
                 switch (HeaderType)
                 {
                     case HT_FULL:
-                        writer.Write24(Timstamp);
+                        writer.Write24(TimeStramp);
                         writer.Write24(MessageLength);
                         writer.WriteByte(MessageType);
                         writer.WriteLittleEndian(StreamId);
                         goto case HT_CONTINUATION;
                     case HT_SAME_STREAM:
-                        writer.Write24(Timstamp);
+                        writer.Write24(TimeStramp);
                         writer.Write24(MessageLength);
                         writer.WriteByte(MessageType);
                         goto case HT_CONTINUATION;
                     case HT_SAME_LENGTH_AND_STREAM:
-                        writer.Write24(Timstamp);
+                        writer.Write24(TimeStramp);
                         goto case HT_CONTINUATION;
                     case HT_CONTINUATION:
-                        if (Timstamp >= 0x00ffffff)
-                            writer.Write(Timstamp);
+                        if (TimeStramp >= 0x00ffffff)
+                            writer.Write(TimeStramp);
                         return true;
                     default:
                         Logger.FATAL("Invalid header size");

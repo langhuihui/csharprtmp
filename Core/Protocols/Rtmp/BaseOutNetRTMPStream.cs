@@ -261,7 +261,7 @@ namespace Core.Protocols.Rtmp
                         return true;
                     }
                     _audioHeader.IsAbsolute = true;
-                    _audioHeader.Timstamp = (uint) (absoluteTimestamp - _pDeltaAudioTime + _seekTime);
+                    _audioHeader.TimeStramp = (uint) (absoluteTimestamp - _pDeltaAudioTime + _seekTime);
                     var firstByte = pData.ReadByte();
                     var secondByte = pData.ReadByte();
                     pData.Position -= 2;
@@ -276,7 +276,7 @@ namespace Core.Protocols.Rtmp
                     if (processedLength == 0)
                     {
                         //Debug.WriteLine("absoluteTimestamp:{0},_pDeltaAudioTime:{1},_seekTime:{2},_pChannelAudio:{3}", absoluteTimestamp, _pDeltaAudioTime, _seekTime, _pChannelAudio.lastOutAbsTs);
-                        _audioHeader.Timstamp =
+                        _audioHeader.TimeStramp =
                             (uint) ((absoluteTimestamp - _pDeltaAudioTime + _seekTime) - _pChannelAudio.lastOutAbsTs);
                     }
 
@@ -309,7 +309,7 @@ namespace Core.Protocols.Rtmp
                         return true;
                     }
                     _videoHeader.IsAbsolute = true;
-                    _videoHeader.Timstamp = (uint) (absoluteTimestamp - _pDeltaVideoTime + _seekTime);
+                    _videoHeader.TimeStramp = (uint) (absoluteTimestamp - _pDeltaVideoTime + _seekTime);
 
                     _isFirstVideoFrame = firstByte == 0x17 && secondByte == 0;
                 }
@@ -322,7 +322,7 @@ namespace Core.Protocols.Rtmp
                     if (processedLength == 0)
                     {
                         //Debug.WriteLine("absoluteTimestamp:{0},_pDeltaVideoTime:{1},_seekTime:{2},_pChannelVideo:{3}", absoluteTimestamp, _pDeltaVideoTime, _seekTime, _pChannelVideo.lastOutAbsTs);
-                        _videoHeader.Timstamp =
+                        _videoHeader.TimeStramp =
                             (uint) ((absoluteTimestamp - _pDeltaVideoTime + _seekTime) - _pChannelVideo.lastOutAbsTs);
                         //Logger.Debug("{0}-{1}-{2}={3}", absoluteTimestamp, _pDeltaVideoTime, _pChannelVideo.lastOutAbsTs, _videoHeader.ts);
                     }
@@ -609,7 +609,7 @@ namespace Core.Protocols.Rtmp
 
         private bool ChunkAndSend(Stream pData, int length, Stream bucket, ref Header header, Channel channel)
         {
-            //Debug.WriteLine("length:{0},ci:{6},si:{1},ht:{2},mt:{3},ml:{4},ts:{5}", length,header.StreamId,header.HeaderType,header.MessageType,header.MessageLength,header.Timstamp,header.ChannelId);
+            //Debug.WriteLine("length:{0},ci:{6},si:{1},ht:{2},mt:{3},ml:{4},ts:{5}", length,header.StreamId,header.HeaderType,header.MessageType,header.MessageLength,header.TimeStramp,header.ChannelId);
             if (header.MessageLength == 0)
             {
                 header.Write(channel, OutputStream);

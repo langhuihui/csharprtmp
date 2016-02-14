@@ -10,16 +10,19 @@ namespace CSharpRTMP.Common
 {
     public class MediaFile : IDisposable
     {
-        public readonly FileInfo FileInfo;
+       // public readonly FileInfo FileInfo;
+        public readonly string FilePath;
+        public readonly string FileName;
         public H2NBinaryWriter Bw;
         public N2HBinaryReader Br;
         public Stream DataStream;
         public int UseCount;
         public MediaFile(string path)
         {
-            FileInfo = new FileInfo(path);
+            var fileInfo = new FileInfo(path);
+            FilePath = fileInfo.FullName;
+            FileName = fileInfo.Name;
         }
-        public string FilePath => FileInfo.FullName;
         public long Length => DataStream.Length;
         public long Position { get { return DataStream.Position; } set { DataStream.Position = value; } }
 
@@ -27,8 +30,8 @@ namespace CSharpRTMP.Common
         {
             try
             {
-                var dataStream = new FileStream(path, fileMode, fileAccess);
-                return new MediaFile(path) { DataStream = dataStream,Br = fileAccess!=FileAccess.Write?new N2HBinaryReader(dataStream):null,Bw = fileAccess!=FileAccess.Read?new H2NBinaryWriter(dataStream) : null};
+                Stream dataStream = new FileStream(path, fileMode, fileAccess);
+                return new MediaFile(path) { DataStream = dataStream, Br = fileAccess!=FileAccess.Write?new N2HBinaryReader(dataStream):null,Bw = fileAccess!=FileAccess.Read?new H2NBinaryWriter(dataStream) : null};
             }
             catch (Exception ex)
             {
@@ -98,7 +101,7 @@ namespace CSharpRTMP.Common
             }
             catch (Exception ex)
             {
-                Logger.FATAL("can't read buffer from {0} {1}", FileInfo.Name, ex.Message);
+                Logger.FATAL("can't read buffer from {0} {1}", FileName, ex.Message);
                 return false;
             }
             return true;
@@ -202,7 +205,7 @@ namespace CSharpRTMP.Common
             }
             try
             {
-                DataStream.Seek(-1, SeekOrigin.Current);
+                DataStream.Seek(-count, SeekOrigin.Current);
             }
             catch (Exception ex)
             {
@@ -229,8 +232,12 @@ namespace CSharpRTMP.Common
 
         public void Dispose()
         {
+            DataStream.Flush();
+            Br?.Close();
+            Bw?.Close();
             Br?.Dispose();
             Bw?.Dispose();
+            DataStream.Dispose();
         }
     }
 }

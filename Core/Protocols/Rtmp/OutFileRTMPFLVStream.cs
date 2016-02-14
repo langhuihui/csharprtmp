@@ -108,11 +108,12 @@ namespace Core.Protocols.Rtmp
 
         public override void SignalDetachedFromInStream()
         {
-            if (_file != null)
-            {
-                this.Log().Info("dispose file writer:{0}", _file.FilePath);
-                _file.Dispose();
-            }
+            Dispose();
+            //if (_file != null)
+            //{
+            //    this.Log().Info("dispose file writer:{0}", _file.FilePath);
+            //    _file.Dispose();
+            //}
         }
 
     }

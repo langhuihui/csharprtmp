@@ -13,12 +13,13 @@ namespace CSharpRTMP.Core.Protocols.WebRtc
 {
     [ProtocolType(ProtocolTypes.PT_INBOUND_WEBSOCKET)]
     [AllowFarTypes(ProtocolTypes.PT_TCP)]
-    [AllowNearTypes(ProtocolTypes.PT_INBOUND_WEBRTC_SIGNAL)]
+    [AllowNearTypes(ProtocolTypes.PT_INBOUND_RTMP)]
     public class WebSocketProtocol:BaseProtocol
     {
         private readonly Regex _regex = new Regex(@"Sec\-WebSocket\-Key:(.*?)\r\n"); //查找"Abc"
         private string _key;
         public bool IsHandShaked;
+        public bool IsUTF8String = true;
         public override MemoryStream OutputBuffer { get; } = Utils.Rms.GetStream();
 
         public override bool SignalInputData(int recAmount)
@@ -91,43 +92,65 @@ namespace CSharpRTMP.Core.Protocols.WebRtc
                     payloadData[i] = (byte)(payloadData[i] ^ masks[i % 4]);
                 }
                 InputBuffer.IgnoreAll();
-                InputBuffer.WriteBytes(payloadData);
-                InputBuffer.Position = 0;
-                InputBuffer.Published = (uint) payloadData.Length;
-                _nearProtocol.SignalInputData(payloadData.Length);
+                if (IsUTF8String)
+                {
+                    var rawString = Encoding.UTF8.GetString(payloadData);
+                    InputBuffer.WriteBytes(rawString.Select(x => (byte)x).ToArray());
+                    InputBuffer.Position = 0;
+                    InputBuffer.Published = (uint)rawString.Length;
+                }
+                else
+                {
+                    InputBuffer.WriteBytes(payloadData);
+                    InputBuffer.Position = 0;
+                    InputBuffer.Published = (uint)payloadData.Length;
+                }
+                _nearProtocol.SignalInputData((int) InputBuffer.Published);
+                InputBuffer.IgnoreAll();
             }
             return true;
         }
 
         public override bool EnqueueForOutbound(MemoryStream outputStream, int offset = 0)
         {
-            outputStream.Position = offset;
-            byte[] content = null;
-            var len = (int)outputStream.Length;
-            if (len < 126)
+            if (IsHandShaked)
             {
-                content = new byte[len + 2];
-                content[0] = 0x81;
-                content[1] = (byte)len;
-                outputStream.Write(content,2, len);
+                outputStream.Position = offset;
+                var len = (int)outputStream.GetAvaliableByteCounts();
+                byte[] content =  new byte[len];
+                outputStream.Read(content, 0, len);
+                if (IsUTF8String)
+                {
+                    content = Encoding.UTF8.GetBytes(content.Select(x=>(char)x).ToArray());
+                    len = content.Length;
+                }
+                outputStream.IgnoreAll();
+                if (len < 126)
+                {
+                    outputStream.WriteByte((byte) (IsUTF8String ? 0x81 : 0x82));
+                    outputStream.WriteByte((byte)content.Length);
+                }
+                else if (len < 0xFFFF)
+                {
+                    outputStream.WriteByte((byte)(IsUTF8String ? 0x81 : 0x82));
+                    outputStream.WriteByte(126);
+                    outputStream.WriteByte((byte)(content.Length >> 8));
+                    outputStream.WriteByte((byte)content.Length);
+                }
+                else
+                {
+                    outputStream.WriteByte((byte)(IsUTF8String ? 0x81 : 0x82));
+                    outputStream.WriteByte(127);
+                    for (var i = 63; i >= 0; i -= 8)
+                    {
+                        outputStream.WriteByte((byte)(content.Length >> i));
+                    }
+                }
+                outputStream.Write(content, 0, content.Length);
+                return base.EnqueueForOutbound(outputStream, 0);
             }
-            else if (len < 0xFFFF)
-            {
-                content = new byte[len + 4];
-                content[0] = 0x81;
-                content[1] = 126;
-                content[2] = (byte)(len & 0xFF);
-                content[3] = (byte)(len >> 8 & 0xFF);
-                outputStream.Write(content, 4, len);
-            }
-            else
-            {
-                // 暂不处理超长内容  
-                throw new NotImplementedException();
-            }
-            outputStream.IgnoreAll();
-            outputStream.Write(content, 0, content.Length);
-            return base.EnqueueForOutbound(outputStream,0);
+            
+            return base.EnqueueForOutbound(outputStream, offset);
         }
 
         public void Handshake(int recAmount)

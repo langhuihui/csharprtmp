@@ -27,7 +27,7 @@ namespace CSharpRTMP.Core.Protocols.Rtmp
         RTMP_STATE_SERVER_RESPONSE_SENT,
         RTMP_STATE_DONE
     }
-    [AllowFarTypes(ProtocolTypes.PT_TCP ,ProtocolTypes.PT_RTMPE ,ProtocolTypes.PT_INBOUND_SSL, ProtocolTypes.PT_INBOUND_HTTP_FOR_RTMP)]
+    [AllowFarTypes(ProtocolTypes.PT_TCP ,ProtocolTypes.PT_RTMPE ,ProtocolTypes.PT_INBOUND_SSL, ProtocolTypes.PT_INBOUND_HTTP_FOR_RTMP,ProtocolTypes.PT_INBOUND_WEBSOCKET)]
     public abstract class BaseRTMPProtocol : BaseProtocol, IInFileRTMPStreamHolder
     {
         public static readonly byte[] GenuineFmsKey ={
@@ -134,7 +134,8 @@ namespace CSharpRTMP.Core.Protocols.Rtmp
         {
             for (var i = 0; i < MAX_STREAMS_COUNT; i++)
             {
-                _streams[i]?.Dispose();
+                if (_streams[i] == null) continue;
+                _streams[i].Dispose();
                 _streams[i] = null;
             }
             //SendMessagesBlock.Complete();
@@ -222,7 +223,7 @@ namespace CSharpRTMP.Core.Protocols.Rtmp
                         }
                         if (!channel.lastInHeader.ReadCompleted) return true;
                    
-                        var ts = channel.lastInHeader.Timstamp;
+                        var ts = channel.lastInHeader.TimeStramp;
                         switch (channel.lastInHeaderType)
                         {
                             case HT_FULL:

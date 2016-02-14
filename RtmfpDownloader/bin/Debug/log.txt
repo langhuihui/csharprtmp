@@ -187,3 +187,38 @@
 2015-11-08 10:29:13,826 9 CSharpRTMP.Core.Protocols.BaseProtocol [INFO ] - Enqueue for delete for protocol RtmfpDownloader.DownloadSession
 2015-11-08 10:29:13,826 9 CSharpRTMP.Core.BaseClientApplication [INFO ] - Protocol RtmfpDownloader.DownloadSession unregistered from application: live4/
 2015-11-08 10:29:13,857 9 CSharpRTMP.Core.Protocols.BaseProtocol [INFO ] - Enqueue for delete for protocol CSharpRTMP.Core.Protocols.UDPProtocol
+2015-12-08 17:04:44,158 9 CSharpRTMP.Core.Protocols.BaseProtocol [INFO ] - Enqueue for delete for protocol RtmfpDownloader.DownloadSession
+2015-12-08 17:04:44,189 9 CSharpRTMP.Core.BaseClientApplication [INFO ] - Protocol RtmfpDownloader.DownloadSession unregistered from application: live2/
+2015-12-08 17:04:44,190 9 CSharpRTMP.Core.Protocols.BaseProtocol [INFO ] - Enqueue for delete for protocol CSharpRTMP.Core.Protocols.UDPProtocol
+2015-12-08 17:07:39,406 9 CSharpRTMP.Core.Protocols.BaseProtocol [INFO ] - Enqueue for delete for protocol RtmfpDownloader.DownloadSession
+2015-12-08 17:07:39,406 9 CSharpRTMP.Core.BaseClientApplication [INFO ] - Protocol RtmfpDownloader.DownloadSession unregistered from application: live4/
+2015-12-08 17:07:39,406 9 CSharpRTMP.Core.Protocols.BaseProtocol [INFO ] - Enqueue for delete for protocol CSharpRTMP.Core.Protocols.UDPProtocol
+2015-12-08 20:32:36,284 23 CSharpRTMP.Core.Protocols.Rtmfp.FlowConnection [INFO ] - _result
+2015-12-08 20:32:36,343 23 CSharpRTMP.Core.Protocols.Rtmfp.FlowConnection [INFO ] - _result
+2015-12-08 20:32:36,507 23 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - 6,onStatus
+2015-12-08 20:32:36,507 23 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - NetStream.Play.Reset
+2015-12-08 20:32:36,509 23 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - 6,onStatus
+2015-12-08 20:32:36,509 23 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - NetStream.Play.Start
+2015-12-28 13:35:10,105 19 CSharpRTMP.Core.Protocols.Rtmfp.FlowConnection [INFO ] - _result
+2015-12-28 13:35:15,935 20 CSharpRTMP.Core.Protocols.Rtmfp.FlowConnection [INFO ] - _result
+2015-12-28 13:35:33,993 21 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - 6,onStatus
+2015-12-28 13:35:33,994 21 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - NetStream.Play.Reset
+2015-12-28 13:35:33,994 21 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - 6,onStatus
+2015-12-28 13:35:33,994 21 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - NetStream.Play.Start
+2015-12-28 13:49:54,721 10 CSharpRTMP.Core.Protocols.BaseProtocol [INFO ] - Enqueue for delete for protocol RtmfpDownloader.DownloadSession
+2015-12-28 13:49:54,726 10 CSharpRTMP.Core.BaseClientApplication [INFO ] - Protocol RtmfpDownloader.DownloadSession unregistered from application: live2/
+2015-12-28 13:49:54,749 10 CSharpRTMP.Core.Protocols.BaseProtocol [INFO ] - Enqueue for delete for protocol CSharpRTMP.Core.Protocols.UDPProtocol
+2015-12-28 13:53:37,054 21 CSharpRTMP.Core.Protocols.Rtmfp.FlowConnection [INFO ] - _result
+2015-12-28 13:53:37,154 21 CSharpRTMP.Core.Protocols.Rtmfp.FlowConnection [INFO ] - _result
+2015-12-28 14:02:58,720 10 CSharpRTMP.Core.Protocols.BaseProtocol [INFO ] - Enqueue for delete for protocol RtmfpDownloader.DownloadSession
+2015-12-28 14:02:58,725 10 CSharpRTMP.Core.BaseClientApplication [INFO ] - Protocol RtmfpDownloader.DownloadSession unregistered from application: live2/
+2015-12-28 14:02:58,738 10 CSharpRTMP.Core.Protocols.BaseProtocol [INFO ] - Enqueue for delete for protocol CSharpRTMP.Core.Protocols.UDPProtocol
+2015-12-28 14:10:18,947 10 CSharpRTMP.Core.Protocols.BaseProtocol [INFO ] - Enqueue for delete for protocol RtmfpDownloader.DownloadSession
+2015-12-28 14:10:18,947 10 CSharpRTMP.Core.BaseClientApplication [INFO ] - Protocol RtmfpDownloader.DownloadSession unregistered from application: live2/
+2015-12-28 14:10:18,947 10 CSharpRTMP.Core.Protocols.BaseProtocol [INFO ] - Enqueue for delete for protocol CSharpRTMP.Core.Protocols.UDPProtocol
+2015-12-28 14:10:48,759 33 CSharpRTMP.Core.Protocols.Rtmfp.FlowConnection [INFO ] - _result
+2015-12-28 14:10:48,806 33 CSharpRTMP.Core.Protocols.Rtmfp.FlowConnection [INFO ] - _result
+2015-12-28 14:10:48,893 24 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - 6,onStatus
+2015-12-28 14:10:48,893 24 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - NetStream.Play.Reset
+2015-12-28 14:10:48,894 24 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - 6,onStatus
+2015-12-28 14:10:48,895 24 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - NetStream.Play.Start

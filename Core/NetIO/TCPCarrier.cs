@@ -66,7 +66,7 @@ namespace CSharpRTMP.Core.NetIO
                     needToSend -= sendCount;
                     s.Position += sendCount;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     Logger.FATAL("Unable to send data.{0}:{1} -> {2}:{3}", FarIP, FarPort, NearIP,
                             NearPort);

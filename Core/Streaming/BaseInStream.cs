@@ -77,8 +77,8 @@ namespace CSharpRTMP.Core.Streaming
         public override bool FeedData(Stream pData, uint dataLength, uint processedLength, uint totalLength, uint absoluteTimestamp,
             bool isAudio)
         {
-            
-            return OnFeedData?.Invoke(pData,dataLength,processedLength,totalLength,absoluteTimestamp,isAudio) ?? true;
+            OnFeedData?.Invoke(pData, dataLength, processedLength, totalLength, absoluteTimestamp, isAudio);
+            return true;
         }
 
         public override void SendStreamMessage(BufferWithOffset buffer) => OnSendStreamMessage?.Invoke(buffer);

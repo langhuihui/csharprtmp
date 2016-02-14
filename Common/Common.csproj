@@ -52,6 +52,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ProtocolTypes.tt</DependentUpon>
     </Compile>
+    <Compile Include="ThisLog4net.cs" />
     <Compile Include="VariantConstructor.cs" />
     <Compile Include="IOBuffer.cs" />
     <Compile Include="MediaFile.cs" />
@@ -67,8 +68,8 @@
     <Compile Include="VariantSerialization.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
-      <HintPath>..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
+    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -79,10 +80,6 @@
     <Reference Include="System.Numerics" />
     <Reference Include="this.Log, Version=0.0.3.0, Culture=neutral, PublicKeyToken=cbf7544467682e94, processorArchitecture=MSIL">
       <HintPath>..\packages\this.Log.0.0.3.0\lib\net40\this.Log.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="this.Log-log4net, Version=0.0.3.0, Culture=neutral, PublicKeyToken=cbf7544467682e94, processorArchitecture=MSIL">
-      <HintPath>..\packages\this.Log-log4net.0.0.3.0\lib\net40\this.Log-log4net.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
@@ -97,7 +94,7 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\源码\Microsoft.IO.RecyclableMemoryStream\src\Microsoft.IO.RecyclableMemoryStream.csproj">
+    <ProjectReference Include="..\..\..\OpenSource\Microsoft.IO.RecyclableMemoryStream\src\Microsoft.IO.RecyclableMemoryStream.csproj">
       <Project>{4b52f0ce-5f4c-43e7-a054-50ca0a502cf3}</Project>
       <Name>Microsoft.IO.RecyclableMemoryStream</Name>
     </ProjectReference>
