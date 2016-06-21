@@ -13,3 +13,5 @@ D:\projects\csharprtmp\Core\bin\Release\System.Threading.Tasks.Dataflow.dll
 D:\projects\csharprtmp\Core\bin\Release\System.Collections.Immutable.xml
 D:\projects\csharprtmp\Core\bin\Release\System.Threading.Tasks.Dataflow.xml
 D:\projects\csharprtmp\Core\bin\Release\this.Log.dll
+D:\projects\csharprtmp\Core\bin\Release\log4net.dll
+D:\projects\csharprtmp\Core\bin\Release\log4net.xml

@@ -440,12 +440,12 @@ namespace Core.Protocols.Rtmp
                     return;
                 }
                 //12. notify onMetaData
-                message = GetNotifyOnMetaData(
-                    _pChannelAudio.id, RTMPStreamId, 0, true, _completeMetadata[Defines.META_RTMP_META]);
-                if (!Protocol.SendMessage( message,false,false))
-                {
-                    Protocol.EnqueueForDelete();
-                }
+                //message = GetNotifyOnMetaData(
+                //    _pChannelAudio.id, RTMPStreamId, 0, true, _completeMetadata[Defines.META_RTMP_META]);
+                //if (!Protocol.SendMessage( message,false,false))
+                //{
+                //    Protocol.EnqueueForDelete();
+                //}
             }
             else
             {
@@ -609,6 +609,7 @@ namespace Core.Protocols.Rtmp
 
         private bool ChunkAndSend(Stream pData, int length, Stream bucket, ref Header header, Channel channel)
         {
+            if (Protocol.IsEnqueueForDelete) return false;
             //Debug.WriteLine("length:{0},ci:{6},si:{1},ht:{2},mt:{3},ml:{4},ts:{5}", length,header.StreamId,header.HeaderType,header.MessageType,header.MessageLength,header.TimeStramp,header.ChannelId);
             if (header.MessageLength == 0)
             {

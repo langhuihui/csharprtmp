@@ -19,7 +19,7 @@ namespace CSharpRTMP.Core.Protocols.WebRtc
         private readonly Regex _regex = new Regex(@"Sec\-WebSocket\-Key:(.*?)\r\n"); //查找"Abc"
         private string _key;
         public bool IsHandShaked;
-        public bool IsUTF8String = true;
+        public bool IsUTF8String = false;
         public override MemoryStream OutputBuffer { get; } = Utils.Rms.GetStream();
 
         public override bool SignalInputData(int recAmount)

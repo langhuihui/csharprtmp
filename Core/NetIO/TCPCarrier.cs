@@ -71,7 +71,7 @@ namespace CSharpRTMP.Core.NetIO
                     Logger.FATAL("Unable to send data.{0}:{1} -> {2}:{3}", FarIP, FarPort, NearIP,
                             NearPort);
                     IOHandlerManager.EnqueueForDelete(this);
-                    break;
+                    return false;
                 }
             }
             s.SetLength(0);

@@ -81,7 +81,7 @@ namespace CSharpRTMP.Core.Protocols.Rtmp
         public const int MAX_CHANNELS_COUNT = 64 + 255;
         public const int RECEIVED_BYTES_COUNT_REPORT_CHUNK = 131072;
         public const int MAX_STREAMS_COUNT = 256;
-        public const int MIN_AV_CHANNLES = 20;
+        public const int MIN_AV_CHANNLES = 4;
         public const int MAX_AV_CHANNLES = MAX_CHANNELS_COUNT;
         protected bool _handshakeCompleted;
         protected RTMPState _rtmpState = RTMPState.RTMP_STATE_NOT_INITIALIZED;
@@ -92,7 +92,7 @@ namespace CSharpRTMP.Core.Protocols.Rtmp
         protected Stack<uint> _channelPool = new Stack<uint>(); 
         protected int _selectedChannel = -1;
         protected uint _inboundChunkSize = 128;
-        protected uint _outboundChunkSize = 128;
+        public uint _outboundChunkSize = 128;
         protected BaseRTMPAppProtocolHandler _pProtocolHandler;
         protected readonly RTMPProtocolSerializer _rtmpProtocolSerializer = new RTMPProtocolSerializer();
         protected readonly IStream[] _streams = new IStream[MAX_STREAMS_COUNT];

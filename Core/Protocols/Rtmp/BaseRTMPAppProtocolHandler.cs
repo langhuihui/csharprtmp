@@ -312,6 +312,7 @@ namespace CSharpRTMP.Core.Protocols.Rtmp
                 case Defines.RM_HEADER_MESSAGETYPE_INVOKE:
                 case Defines.RM_HEADER_MESSAGETYPE_FLEX:
                     string functionName = messageBody[Defines.RM_INVOKE][Defines.RM_INVOKE_FUNCTION];
+                    Logger.INFO(functionName);
                     uint currentInvokeId = messageBody[Defines.RM_INVOKE, Defines.RM_INVOKE_ID];
                     if (currentInvokeId != 0 && _nextInvokeId[pFrom.Id] <= currentInvokeId)
                     {
@@ -325,7 +326,6 @@ namespace CSharpRTMP.Core.Protocols.Rtmp
                     {
                         case Defines.RM_INVOKE_FUNCTION_CONNECT:
                             return ProcessInvokeConnect(pFrom,  message);
-                            
                         case Defines.RM_INVOKE_FUNCTION_CREATESTREAM:
                             //1. Create the neutral stream
                             uint id = 0;
@@ -334,7 +334,6 @@ namespace CSharpRTMP.Core.Protocols.Rtmp
                                 Logger.FATAL("Unable to create stream");
                                 return false;
                             }
-
                             //2. Send the response
                             return SendRTMPMessage(pFrom,  StreamMessageFactory.GetInvokeCreateStreamResult(message, id));
                         case Defines.RM_INVOKE_FUNCTION_PUBLISH:
@@ -758,32 +757,25 @@ namespace CSharpRTMP.Core.Protocols.Rtmp
                 return true;
             }
             //1. Send the channel specific messages
-            if (!SendRTMPMessage(pFrom,  GenericMessageFactory.GetWinAckSize(2500000)))
-            {
-               
-                return false;
-            }
-            if (!SendRTMPMessage(pFrom,  GenericMessageFactory.GetPeerBW(2500000, Defines.RM_PEERBW_TYPE_DYNAMIC)))
-            {
-               
-                return false;
-            }
+            if (!SendRTMPMessage(pFrom, GenericMessageFactory.GetWinAckSize(2500000)))    return false;
+
+            if (!SendRTMPMessage(pFrom, GenericMessageFactory.GetPeerBW(2500000, Defines.RM_PEERBW_TYPE_DYNAMIC))) return false;
+
             //2. Initialize stream 0
-            if (!SendRTMPMessage(pFrom,  StreamMessageFactory.GetUserControlStreamBegin(0)))
-            {
+            //if (!SendRTMPMessage(pFrom,  StreamMessageFactory.GetUserControlStreamBegin(0)))
+            //{
                 
-                return false;
-            }
+            //    return false;
+            //}
+            if (!pFrom.SendMessage(GenericMessageFactory.GetChunkSize(pFrom._outboundChunkSize)))  return false;
+              
             //3. Send the connect result
-            if (!SendRTMPMessage(pFrom,  ConnectionMessageFactory.GetInvokeConnectResult(message)))
-            {
-               
-                return false;
-            }
+            if (!SendRTMPMessage(pFrom, ConnectionMessageFactory.GetInvokeConnectResult(message)))  return false;
+
             //4. Send onBWDone
-            if (SendRTMPMessage(pFrom,  GenericMessageFactory.GetInvokeOnBWDone(1024 * 8))) return true;
-           
-            return false;
+            if (!SendRTMPMessage(pFrom, GenericMessageFactory.GetInvokeOnBWDone(1024 * 8))) return false;
+
+            return true;
         }
 
         virtual protected bool ProcessInvokeGeneric(BaseRTMPProtocol pFrom, AmfMessage request)

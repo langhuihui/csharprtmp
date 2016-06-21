@@ -184,23 +184,23 @@ namespace CSharpRTMP.Core.Streaming
                 //}
                 var preTagSize = MediaFile.Br.ReadInt32();
                 //14. Store it in the proper location and adjust the timestamp accordingly
-                if (frame.IsBinaryHeader)
-                {
-                    frame.AbsoluteTime = 0;
+                //if (frame.IsBinaryHeader)
+                //{
+                    //frame.AbsoluteTime = 0;
                     binaryHeaders.Insert(0, frame);
                     //binaryHeaders.Add(frame);
 
-                }
-                else
-                {
+                //}
+                //else
+               // {
                     _frames.Add(frame);
 
-                }
+               // }
             }
             //_frames.Sort(CompareFrames);
 
             //15. Add the binary headers
-            _frames.InsertRange(0, binaryHeaders);
+            //_frames.InsertRange(0, binaryHeaders);
             //for (var i = 0; i < binaryHeaders.Count; i++) {
             //    _frames.Insert(0, binaryHeaders[i]);
 

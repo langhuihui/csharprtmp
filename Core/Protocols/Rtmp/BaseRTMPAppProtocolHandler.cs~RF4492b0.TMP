@@ -1,0 +1,698 @@
+Ôªøusing System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.Sockets;
+using System.Security.Cryptography;
+using System.Text;
+using Core.Protocols.Rtmp;
+using CSharpRTMP.Common;
+using CSharpRTMP.Core.Protocols.Cluster;
+using CSharpRTMP.Core.Protocols.Timer;
+using CSharpRTMP.Core.Streaming;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
+namespace CSharpRTMP.Core.Protocols.Rtmp
+{
+    public class BaseRTMPAppProtocolHandler : BaseAppProtocolHandler
+    {
+        protected readonly Dictionary<uint, BaseRTMPProtocol> _connections = new Dictionary<uint, BaseRTMPProtocol>();
+        protected readonly Dictionary<uint, uint> _nextInvokeId = new Dictionary<uint, uint>();
+        public readonly bool ValidateHandshake;
+        //protected readonly bool _keyframeSeek;
+        //protected readonly int _clientSideBuffer;
+        //protected readonly uint _seekGranularity;
+        //protected readonly bool _renameBadFiles;
+        //protected readonly bool _externSeekGenerator;
+        protected readonly bool _enableCheckBandwidth;
+        protected DateTime _lastUsersFileUpdate;
+        protected readonly AmfMessage _onBWCheckMessage;
+        protected AmfMessage _onBWCheckStrippedMessage;
+
+        protected readonly Dictionary<uint, Dictionary<uint, AmfMessage>> _resultMessageTracking = new Dictionary<uint, Dictionary<uint, AmfMessage>>();
+        protected const int ONBWCHECK_SIZE = 32767;
+        protected string _authMethod;
+        protected Variant _adobeAuthSettings;
+        protected string _adobeAuthSalt;
+        protected Variant _users;
+        private BaseRTMPProtocol _externalStreamProtocol;
+
+        public BaseRTMPAppProtocolHandler(Variant configuration)
+            : base(configuration)
+        {
+            ValidateHandshake = configuration[Defines.CONF_APPLICATION_VALIDATEHANDSHAKE];
+            //_keyframeSeek = configuration[Defines.CONF_APPLICATION_KEYFRAMESEEK];
+            //_clientSideBuffer = configuration[Defines.CONF_APPLICATION_CLIENTSIDEBUFFER];
+            //_seekGranularity = (uint)((double)configuration[Defines.CONF_APPLICATION_SEEKGRANULARITY] * 1000);
+            //_renameBadFiles = configuration[Defines.CONF_APPLICATION_RENAMEBADFILES];
+            //_externSeekGenerator = configuration[Defines.CONF_APPLICATION_EXTERNSEEKGENERATOR];
+            // _enableCheckBandwidth = configuration["enableCheckBandwidth"] != null && configuration["enableCheckBandwidth"];
+            _enableCheckBandwidth = true;
+            if (_enableCheckBandwidth)
+            {
+                _onBWCheckMessage = GenericMessageFactory.GetInvoke(3, 0, 0, false, 0,
+                    Defines.RM_INVOKE_FUNCTION_ONBWCHECK,
+                    Variant.GetList(Variant.Get(), Utils.GenerateRandomString(ONBWCHECK_SIZE)));
+                _onBWCheckStrippedMessage = new AmfMessage
+                {
+                    Header =
+                        GenericMessageFactory.VH(HeaderType.HT_FULL, 3, 0, 0, Defines.RM_HEADER_MESSAGETYPE_INVOKE, 0,
+                            false),
+
+                    Body = Variant.GetMap(new VariantMapHelper
+                    {
+                        {
+                            Defines.RM_INVOKE,
+                            Variant.GetMap(new VariantMapHelper
+                            {
+                                {Defines.RM_INVOKE_FUNCTION, Defines.RM_INVOKE_FUNCTION_ONBWCHECK}
+                            })
+                        }
+                    })
+                };
+            }
+            if (configuration[Defines.CONF_APPLICATION_GENERATE_META_FILES])
+            {
+                GenerateMetaFiles();
+            }
+        }
+
+        public override bool ParseAuthenticationNode(Variant node, Variant result)
+        {
+            //1. Validation
+            if (node[Defines.CONF_APPLICATION_AUTH_TYPE] != Defines.CONF_APPLICATION_AUTH_TYPE_ADOBE)
+            {
+                Logger.FATAL("Invalid authe = H264SwDecGetInfo(decInst, &decInfo);
+			if (ret != H264SWDEC_OK) {
+				return -1;
+			}
+
+			picSize = decInfo.picWidth * decInfo.picHeight;
+			picSize = (3 * picSize) / 2;
+
+			//broadwayOnHeadersDecoded();
+
+			decInput.dataLen -= decOutput.pStrmCurrPos - decInput.pStream;
+			decInput.pStream = decOutput.pStrmCurrPos;
+			break;
+
+		case H264SWDEC_PIC_RDY_BUFF_NOT_EMPTY:
+			/* Picture is ready and more data remains in the input buffer,
+			* update input structure.
+			*/
+			decInput.dataLen -= decOutput.pStrmCurrPos - decInput.pStream;
+			decInput.pStream = decOutput.pStrmCurrPos;
+
+			/* fall through */
+
+		case H264SWDEC_PIC_RDY:
+			if (ret == H264SWDEC_PIC_RDY) {
+				decInput.dataLen = 0;
+			}
+
+			/* Increment decoding number for every decoded picture */
+			picDecodeNumber++;
+			while (H264SwDecNextPicture(decInst, &decPicture, 0) == H264SWDEC_PIC_RDY) {
+				// printf(" Decoded Picture Decode: %d, Display: %d, Type: %s\n", picDecodeNumber, picDisplayNumber, decPicture.isIdrPicture ? "IDR" : "NON-IDR");
+				/* Increment display number for every displayed picture */
+				picDisplayNumber++;
+				broadwayOnPictureDecoded((u8*)decPicture.pOutputPicture, decInfo.picWidth, decInfo.picHeight);
+			}
+			break;
+
+		case H264SWDEC_STRM_PROCESSED:
+		case H264SWDEC_STRM_ERR:
+			/* Input stream was decoded but no picture is ready, thus get more data. */
+			decInput.dataLen = 0;
+			break;
+		default:
+			emscripten_log(0, "%d",-ret);
+			decInput.dataLen = 0;
+			break;
+		}
+		return ret;
+	}
+	
+public:
+	NetConnection *nc;
+	bool isFirstVideoReceived = true;
+	byte NAL_unit_length;
+	int spsLen = 0;
+	int ppsLen = 0;
+	//string sps;
+	//string pps;
+	bool webgl = false;
+	val* jsThis;
+	int id;
+	clock_t timestamp;
+	int timeoutId;
+	vector<RtmpPacket> videoBuffers;
+	NetStream(NetConnection* _nc);
+
+	~NetStream()
+	{
+		if(heap!=NULL)free(heap);
+		if (audioBuffer != NULL)free(audioBuffer);
+		if (audioOutput != NULL)free(audioOutput);
+		speex_decoder_destroy(speexState);
+		speex_bits_destroy(&speexBits);
+		if (jsThis != nullptr)delete jsThis;
+	}
+	void onConnect(val&& result);
+	void play(string name);
+	void attachCanvas(val _this,bool webgl) {
+		this->webgl = webgl;
+		canvasAttached = true;
+		emscripten_log(0, "webgl:%s", webgl ? "true" : "false");
+		//consoleLog("webgl:%s",webgl?"true":"false");
+		if (!jsThis)jsThis = new val(_this);
+	}
+	void _decodeVideo(const char* data,int len) {
+		//emscripten_log(0, "%d %d",len,(int)data);
+		decInput.pStream = (u8*)data;
+		decInput.dataLen = len;
+		u32 i = 0;
+		do {
+			u8 *start = decInput.pStream;
+			u32 ret = broadwayDecode();
+			//emscripten_log(0,"Decoded Unit #%d, Size: %x, Result: %i\n", i++, (decInput.pStream - start), ret);
+		} while (decInput.dataLen > 0);
+	}
+	inline void decodeVideo(MemoryStream& data) {
+		int NALUnitLength = 0;
+		data >>= 5;
+		while (data.length() > 4) {
+			switch (NAL_unit_length) {
+			case 3:
+				data.read4B(NALUnitLength);
+				break;
+			case 2:
+				data.read3B(NALUnitLength);
+				break;
+			case 1:
+				data.read2B(NALUnitLength);
+				break;
+			default:
+				data.read1(NALUnitLength);
+			}
+			byte naluType = data[0] & 0x1f;
+			switch (naluType) {
+			case 5:
+			case 1:
+				_decodeVideo((const char *)data, NALUnitLength);
+				break;
+			}
+			data >>= NALUnitLength;
+		}
+	}
+	void decodeVideoBuffer() {
+		timeoutId = 0;
+		if (videoBuffers.size() > 0) {
+			decodeVideo(videoBuffers[videoBuffers.size()-1].data);
+			videoBuffers.pop_back();
+			if (videoBuffers.size() > 0) {
+				int time = videoBuffers[videoBuffers.size() - 1].rtmpHeader.timestamp;
+				auto targetTime = clock() / 1000 - timestamp;
+
+				if (time > targetTime) {
+					timeoutId = jsThis->call<int>("checkVideoBuffer", time - targetTime);
+					return;
+				}
+				else {
+					decodeVideoBuffer();
+				}
+			}
+		}
+	}
+	bool decodeVideo(RtmpHeader& rtmpHeader, MemoryStream& data) {
+		
+		int index = 0;
+		byte frame_type = data[0];
+		int codec_id = frame_type & 0x0f;
+		frame_type = (frame_type >> 4) & 0x0f;
+		if (codec_id != 7) {
+			emscripten_log(0, "Only support video h.264/avc codec. actual=%d", codec_id);
+			return -1;
+		}
+		byte avc_packet_type = data[1];
+		if (data[0] == 0x17 && avc_packet_type == 0) {
+			if (isFirstVideoReceived) {
+				timestamp = clock() / 1000 - rtmpHeader.timestamp;
+				byte lengthSizeMinusOne = data[9];
+				lengthSizeMinusOne &= 0x03;
+				NAL_unit_length = lengthSizeMinusOne;
+				data.offset = 11;
+				data.consoleHex();
+				data.read2B(spsLen);
+				if (spsLen > 0) {
+					_decodeVideo((const char*)data,spsLen);
+					data >>= spsLen;
+				}
+				data >>= 1;
+				data.read2B(ppsLen);
+				if (ppsLen > 0) {
+					_decodeVideo((const char*)data,ppsLen);
+				}
+				isFirstVideoReceived = false;
+			}
+		}
+		else {
+			if (!canvasAttached)return false;
+			//auto targetTime = clock()/1000 - timestamp;
+			////consoleLog("%d %d", rtmpHeader.timestamp,targetTime);
+			//if (rtmpHeader.timestamp > targetTime) {
+			//	videoBuffers.insert(videoBuffers.begin(), RtmpPacket(rtmpHeader,data));
+			//	if(timeoutId == 0)
+			//		timeoutId = jsThis->call<int>("checkVideoBuffer", rtmpHeader.timestamp - targetTime);
+			//	return false;
+			//}
+			
+			decodeVideo(data);
+		}
+		return true;
+	}
+	bool decodeAudio(RtmpHeader& rtmpHeader,MemoryStream & data) {
+		data.offset = 1;
+		if (data.length() <= 11) {
+			memset(audioBuffer + audioBufferCounts * 640,0,640);
+		}
+		else {
+			speex_bits_read_from(&speexBits, (const char *)data, 52);
+			speex_decode_int(speexState, &speexBits, audioOutput);
+			memcpy(audioBuffer + audioBufferCounts * 640, audioOutput, 640);
+		}
+		audioBufferCounts++;
+		if (audioBufferCounts == audioBufferLength) {
+			audioBufferCounts = 0;
+			jsThis->call<void>("playAudio");
+		}
+		return true;
+	}
+	int initAudio(val _this,int bufferFrames) {
+		audioBufferLength = bufferFrames;
+		if(!jsThis)jsThis =new val(_this);
+		auto mode = speex_lib_get_mode(SPEEX_MODEID_WB);
+		speexState = speex_decoder_init(mode);
+		speex_bits_init(&speexBits);
+		audioOutput = (i16*)malloc(640);
+		audioBufferCounts = 0;
+		audioBuffer = (u8*)malloc(640* bufferFrames);
+		return (int)audioBuffer;
+	}
+};
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               // ÊúâÂÖ≥‚ÄúÁ©∫ÁôΩ‚ÄùÊ®°ÊùøÁöÑÁÆÄ‰ªãÔºåËØ∑ÂèÇÈòÖ‰ª•‰∏ãÊñáÊ°£:
+// http://go.microsoft.com/fwlink/?LinkID=397705
+// Ëã•Ë¶ÅÂú® Ripple Êàñ Android ËÆæÂ§á/‰ªøÁúüÁ®ãÂ∫è‰∏≠Ë∞ÉËØï‰ª£Á†Å: ÂêØÁî®‰Ω†ÁöÑÂ∫îÁî®Á®ãÂ∫èÔºåËÆæÁΩÆÊñ≠ÁÇπÔºå
+// ÁÑ∂ÂêéÂú® JavaScript ÊéßÂà∂Âè∞‰∏≠ËøêË°å "window.location.reload()"„ÄÇ
+var Ride;
+(function (Ride) {
+    "use strict";
+    var Application;
+    (function (Application) {
+        function initialize() {
+            document.addEventListener('deviceready', onDeviceReady, false);
+        }
+        Application.initialize = initialize;
+        function onDeviceReady() {
+            // Â§ÑÁêÜ Cordova ÊöÇÂÅúÂπ∂ÊÅ¢Â§ç‰∫ã‰ª∂
+            document.addEventListener('pause', onPause, false);
+            document.addEventListener('resume', onResume, false);
+            // TODO: Cordova Â∑≤Âä†ËΩΩ„ÄÇÂú®Ê≠§Â§ÑÊâßË°å‰ªª‰ΩïÈúÄË¶Å Cordova ÁöÑÂàùÂßãÂåñ„ÄÇ
+            var element = document.getElementById("deviceready");
+            element.innerHTML = 'Device Ready';
+            element.className += ' ready';
+        }
+        function onPause() {
+            // TODO: Ê≠§Â∫îÁî®Á®ãÂ∫èÂ∑≤ÊåÇËµ∑„ÄÇÂú®Ê≠§Â§Ñ‰øùÂ≠òÂ∫îÁî®Á®ãÂ∫èÁä∂ÊÄÅ„ÄÇ
+        }
+        function onResume() {
+            // TODO: Ê≠§Â∫îÁî®Á®ãÂ∫èÂ∑≤ÈáçÊñ∞ÊøÄÊ¥ª„ÄÇÂú®Ê≠§Â§ÑËøòÂéüÂ∫îÁî®Á®ãÂ∫èÁä∂ÊÄÅ„ÄÇ
+        }
+    })(Application = Ride.Application || (Ride.Application = {}));
+    window.onload = function () {
+        Application.initialize();
+    };
+})(Ride || (Ride = {}));
+//# sourceMappingURL=appBundle.js.map                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 1 0 \ I N C L U D E \ 1 0 . 0 . 1 0 2 4 0 . 0 \ U C R T \ C O R E C R T _ I O . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 1 0 \ I N C L U D E \ 1 0 . 0 . 1 0 2 4 0 . 0 \ U C R T \ C O R E C R T _ S H A R E . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 1 0 \ I N C L U D E \ 1 0 . 0 . 1 0 2 4 0 . 0 \ U C R T \ C O R E C R T _ W I O . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 1 0 \ I N C L U D E \ 1 0 . 0 . 1 0 2 4 0 . 0 \ U C R T \ F C N T L . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ W I N D O W S . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ S H A R E D \ W I N A P I F A M I L Y . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ S H A R E D \ S D K D D K V E R . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ M I C R O S O F T   V I S U A L   S T U D I O   1 4 . 0 \ V C \ I N C L U D E \ E X C P T . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ S H A R E D \ W I N D E F . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ S H A R E D \ M I N W I N D E F . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ S H A R E D \ S P E C S T R I N G S . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ S H A R E D \ S P E C S T R I N G S _ S T R I C T . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ S H A R E D \ S P E C S T R I N G S _ U N D E F . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ S H A R E D \ D R I V E R S P E C S . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ S H A R E D \ S D V _ D R I V E R S P E C S . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ W I N N T . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ S H A R E D \ K E R N E L S P E C S . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ S H A R E D \ B A S E T S D . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ S H A R E D \ G U I D D E F . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ S H A R E D \ P S H P A C K 4 . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ S H A R E D \ P O P P A C K . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ S H A R E D \ P S H P A C K 2 . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ S H A R E D \ P S H P A C K 8 . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ S H A R E D \ A P I S E T . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ S H A R E D \ K T M T Y P E S . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ W I N B A S E . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ S H A R E D \ A P I S E T C C O N V . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ M I N W I N B A S E . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ P R O C E S S E N V . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ F I L E A P I . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ D E B U G A P I . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ U T I L A P I S E T . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ H A N D L E A P I . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ E R R H A N D L I N G A P I . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ F I B E R S A P I . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ N A M E D P I P E A P I . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ P R O F I L E A P I . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ H E A P A P I . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ I O A P I S E T . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ S Y N C H A P I . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ I N T E R L O C K E D A P I . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ P R O C E S S T H R E A D S A P I . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ S Y S I N F O A P I . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ M E M O R Y A P I . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ T H R E A D P O O L L E G A C Y A P I S E T . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ T H R E A D P O O L A P I S E T . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ B E M A P I S E T . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ J O B A P I . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ W O W 6 4 A P I S E T . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ L I B L O A D E R A P I . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ S E C U R I T Y B A S E A P I . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ N A M E S P A C E A P I . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ S Y S T E M T O P O L O G Y A P I . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ P R O C E S S T O P O L O G Y A P I . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ S E C U R I T Y A P P C O N T A I N E R . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ R E A L T I M E A P I S E T . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ S H A R E D \ W I N E R R O R . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ T I M E Z O N E A P I . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ W I N G D I . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ S H A R E D \ P S H P A C K 1 . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ W I N U S E R . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ S H A R E D \ T V O U T . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ W I N N L S . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ D A T E T I M E A P I . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ S T R I N G A P I S E T . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ W I N C O N . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ C O N S O L E A P I . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ W I N V E R . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ V E R R S R C . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ W I N R E G . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ R E A S O N . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ W I N N E T W K . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ S H A R E D \ W N N C . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ S H A R E D \ C D E R R . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ D D E . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ D D E M L . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ D L G S . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ L Z E X P A N D . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ M M S Y S T E M . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ M M S Y S C O M . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ M C I A P I . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ M M I S C A P I . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ M M I S C A P I 2 . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ P L A Y S O U N D A P I . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ M M E A P I . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ T I M E A P I . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ J O Y S T I C K A P I . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ N B 3 0 . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ S H A R E D \ R P C . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ S H A R E D \ R P C D C E . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ S H A R E D \ R P C D C E P . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ R P C N S I . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ S H A R E D \ R P C N T E R R . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ S H A R E D \ R P C A S Y N C . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ S H E L L A P I . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ W I N P E R F . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ W I N S O C K . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ S H A R E D \ I N A D D R . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ W I N C R Y P T . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ S H A R E D \ B C R Y P T . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ N C R Y P T . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ D P A P I . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ W I N E F S . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ W I N S C A R D . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ S H A R E D \ W T Y P E S . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ S H A R E D \ R P C N D R . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ R P C N S I P . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ S H A R E D \ R P C S A L . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ S H A R E D \ W T Y P E S B A S E . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ W I N I O C T L . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ S H A R E D \ W I N S M C R D . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ W I N S P O O L . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ P R S H T . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ O L E 2 . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ O B J B A S E . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ C O M B A S E A P I . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ U N K N W N B A S E . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ O B J I D L B A S E . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ C G U I D . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ O B J I D L . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ U N K N W N . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ U R L M O N . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ O L E I D L . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ S E R V P R O V . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 \ I N C L U D E \ U M \ M S X M L . H  
+ C : \ P R O G R A M   F I L E S   ( X 8 6 ) \ W I N D O W S   K I T S \ 8 . 1 5source?5version@ Ç 1†•  Ä\    .Ì %??_C@_0L@LAMPCOH@?9separator?$AA@ Ç †•  ÄΩ    /Ì %??_C@_0L@CFFBGADM@?9nullvalue?$AA@ Ç †•  ÄΩ    0Ì %??_C@_08CAKPDJBK@?9newline?$AA@ Ç 	†•  Ä±    1Ì %??_C@_04GIIBENGK@?9cmd?$AA@ Ç †•  Äù    4Ì %??_C@_05LGIBJBOF@?9init?$AA@ Ç †•  Ä°    7Ì %??_C@_06COHPCLGM@?9batch?$AA@ Ç †•  Äû    :Ì %??_C@_05DGJPKLOI@?9heap?$AA@ Ç †•  Ä°    =Ì %??_C@_08BDJJBPIE@?9scratch?$AA@ Ç 	†•  Ä±    DÌ %??_C@_0L@DKGOCIMC@?9pagecache?$AA@ Ç †•  ÄΩ    IÌ %??_C@_0L@HNKLIODH@?9lookaside?$AA@ Ç †•  ÄΩ    OÌ %??_C@_05DLMLAMHH@?9mmap?$AA@ Ç †•  Ä°    QÌ %??_C@_04GJAIBLA@?9vfs?$AA@ Ç †•  Äù    TÌ %??_C@_0BD@PCDAOFCI@no?5such?5VFS?3?5?$CC?$CFs?$CC?6?$AA@ Ç †•  Ä-    VÌ %??_C@_08CADOGOJM@?3memory?3?$AA@ Ç 	†•  Ä±    ^Ì %??_C@_05DBFHDPCL@?9html?$AA@ Ç †•  Ä°    aÌ %??_C@_05PCAHAAIK@?9list?$AA@ Ç †•  Ä°    dÌ %??_C@_05LFCABDLJ@?9line?$AA@ Ç †•  Ä°    gÌ %??_C@_07GIFO@?9column?$AA@ Ç †•  Ä†    jÌ %??_C@_04GMNLDMD@?9csv?$AA@ Ç †•  Äù    mÌ %??_C@_06GLIJEGJB@?9ascii?$AA@ Ç †•  Äû    vÌ %??_C@_07FLMNOHGM@?9header?$AA@ Ç †•  Ä†    yÌ %??_C@_09JINPEHLF@?9noheader?$AA@ Ç 
+†•  Ä    |Ì %??_C@_05CJOPAFJE@?9echo?$AA@ Ç †•  Ä°    Ì %??_C@_04HGHIJPPH@?9eqp?$AA@ Ç †•  Äù    ÇÌ %??_C@_06JJGNDLGC@?9stats?$AA@ Ç †•  Äû    ÖÌ %??_C@_0L@DDLMNLBL@?9scanstats?$AA@ Ç †•  ÄΩ    àÌ %??_C@_0L@DJNCDAMN@?9backslash?$AA@ Ç †•  ÄΩ    ãÌ %??_C@_05BLCJCIPL@?9bail?$AA@ Ç †•  Ä°    éÌ %??_C@_08NPLKDBJI@?9version?$AA@ Ç 	†•  Ä±    ëÌ %??_C@_0N@BFIIEBJG@?9interactive?$AA@ Ç †•  Ä"    ¢Ì %??_C@_05DOEHDILL@?9help?$AA@ Ç †•  Ä°    ≠Ì %??_C@_0CD@BDEIHDPA@Error?3?5unable?5to?5process?5SQL?5?$CC?$CFs@ Ç #†•  Ä9    ØÌ %??_C@_0BP@MHIEKCLP@?$CFs?3?5Error?3?5unknown?5option?3?5?$CFs?6?$AA@ Ç †•  Ä}    ∞Ì %??_C@_0CC@HLNKIHJO@Use?5?9help?5for?5a?5list?5of?5options?4@ Ç "†•  Ä¢    πÌ %??_C@_0CC@EBOOJDDB@Error?3?5unable?5to?5process?5SQL?3?5?$CFs@ Ç "†•  Ä¢    ºÌ %??_C@_0DI@GJABFFOD@SQLite?5version?5?$CFs?5?$CF?419s?6Enter?5?$CC?4@ Ç 8†•  ÄÒ    æÌ %??_C@_0BA@ENOIGEKO@Connected?5to?5a?5?$AA@ Ç †•  Äi    øÌ %??_C@_0BN@IBJDAAPC@transient?5in?9memory?5database?$AA@ Ç †•  ÄÊ    ¿Ì %??_C@_0DM@GGOHCHIJ@?4?6Use?5?$CC?4open?5FILENAME?$CC?5to?5reopen@ Ç <†•  Äx    √Ì %??_C@_0BD@CKPKNFJ@?$CFs?1?4sqlite_history?$AA@ Ç †•  Ä-   4 __local_stdio_printf_options à   Ä.  õ   Ä∏  Ä‚  Äê  79 __local_stdio_scanf_options à   Ä.  ú   Ä  Ä  Äê  <Ú _vfwprintf_l Ü   Ä1  ù   Äh  Ä8  »4” _vfwprintf_s_l Ü   Ä1  û   ÄŸ  Ä  »4ﬁ _vfwprintf_p_l Ü   Ä1  ü   ÄJ  ÄÍ  »4ÈÌ _vfwscanf_l Ü   Ä1  †   ÄU'  Ä4  »9‰  _vfwscanf_s_l Ü   Ä1  °   Ä∆(  Ä  »9‰≈ _vsnwprintf_l Ü   ÄB  ¢   Ä˘5  Ä‹  &»4ë‘ _vsnwprintf_s_l Ü   Ä?  £   Ä 7  Äë  '»4≠ _vswprintf_c_l Ü   ÄB  §   Äö9  Äz  $»4ë  _vswprintf_l Ü   ÄB  •   ÄU;  ÄÆ  »* __vswprintf_l Ü   ÄH  ¶   Ä<  ÄH  » L _vswprintf_s_l Ü   ÄB  ß   ÄB>  Ä†  $»4ûd _vswprintf_p_l Ü   ÄB  ®   Ä˝?  Ä‘  $»4∫x _vscwprintf_l Ü   ÄE  ©   Ä∏A  Ä  $»4ëâ _vscwprintf_p_l Ü   ÄE  ™   ÄRC  Ä∆  $»4∫µ _vswscanf_l Ü   ÄN  ´   ÄÛX  Ä(  »9¨… _vswscanf_s_l Ü   ÄN  ¨   ÄmZ  ÄÊ(  »9¨ﬂ _vsnwscanf_l Ü   ÄQ  ≠   ÄÌ[  Äø)  »9¨Î _vsnwscanf_s_l Ü   ÄQ  Æ   Ä¡\  ÄY*  »9¨Ÿ _vfprintf_l Ü   ÄX  Ø   Äãf  Äè/  »4∫· vfprintf Ü   Äõ  ∞   ÄQg  Ä	0  »ŸÏ _vfprintf_s_l Ü   ÄX  ±   Ä¸g  Äh0  »4≈ˇ _vfprintf_p_l Ü   ÄX  ≤   Ämi  ÄA1  »4–H fprintf Ü`  Ä≥  ≥   ÄUp  Äî4  "àŸî printf Ü`  Är  ¥   Ä’v  Äé7  %àAŸŸ _vfscanf_l Ü   ÄX  µ   Äx|  Äã9  »9–Ï _vfscanf_s_l Ü   ÄX  ∂   ÄÈ}  Äd:  »9–± _vsnprintf_l Ü   Ä_  ∑   Äã  Ä3@  &»4}º _vsnprintf Ü   Än  ∏   Ä#å  ÄË@  »±« vsnprintf Ü   Än  π   Ä‰å  ÄgA  %»4}” _vsprintf_l Ü   Äk  ∫   ÄÁç  ÄB  »±Í _vsprintf_s_l Ü   Ä_  ª   Äcè  Ä⁄B  $»4ä _vsprintf_p_l Ü   Ä_  º   Äë  ÄD  $»4¶ _vsnprintf_s_l Ü   Äe  Ω   ÄŸí  ÄBE  '»4ô? _vscprintf_l Ü   Äh  æ   Äzï  ÄLG  $»4}P _vscprintf_p_l Ü   Äh  ø   Äó  Ä
+H  $»4¶X _vscprintf_p Ü   Äq  ¿   Äò  ÄÑH  »Pe _vsnprintf_c_l Ü   Ä_  ¡   ÄÆò  Ä»H  $»4}É _vsscanf_l Ü   Äw  ¬   Ä:≠  ÄÿS  »9zó _vsscanf_s_l Ü   Äw  √   Ä¥Æ  Ä±T  »9z† vsscanf_s Ü   Äz  ƒ   ÄâØ  Ä+U  »óÉ" __acrt_get_locale_data_prefix à   ÄÜ  ≈   Äoπ  Ä&Z  ¿ é" _chvalidchk_l Ü   Äè  ∆   Ä∫  Ä~Z  $»T!É"ë$ setBinaryMode Ç    Ä∂  «   Änº  Ä@[  H£∑¡#ï$ setTextMode Ç    Ä∂  »   ÄΩ  Äd[  H£∑¡#ô$ timeOfDay à   Äo  …   ÄÃΩ  Äà[  9H ú$	) ReadAcquire8 Ç   Ä·      Ä-Ã  Äo`  
+¿0 
+) ReadNoFence8 Ç   Ä·  À   ÄΩÃ  Ä´`  
+¿0 ) WriteRelease8 Ç    ÄÊ  Ã   ÄMÕ  ÄÁ`  	¿0 ) WriteNoFence8 Ç    ÄÊ  Õ   ÄŒÕ  Ä(a  	¿0 ) ReadAcquire16 Ñ   ÄÎ  Œ   ÄOŒ  Äia  
+¿0  ) ReadNoFence16 Ñ   ÄÎ  œ   ÄﬂŒ  Ä•a  
+¿0 ') WriteRelease16 Ç    Ä  –   Äoœ  Ä·a  	¿0 -) WriteNoFence16 Ç    Ä  —   Äœ  Ä"b  	¿0 1) ReadAcquire Ü   Äı  “   Äq–  Äcb  
+¿0 6) ReadNoFence Ü   Äı  ”   Ä—  Äüb  
+¿0 =) WriteRelease Ç    Ä˙  ‘   Äë—  Ä€b  	¿0 C) WriteNoFence Ç    Ä˙  ’   Ä“  Äc  	¿0 G) ReadAcquire64 à   Äˇ  ÷   Äì“  Ä]c  
+¿0 L) ReadNoFence64 à   Äˇ  ◊   Ä#”  Äôc  
+¿0 S) WriteRelease64 Ç    Ä  ÿ   Ä≥”  Ä’c  	¿0 Y) WriteNoFence64 Ç    Ä  Ÿ   Ä4‘  Äd  	¿0 ]) ReadRaw8 Ç   Ä·  ⁄   Äµ‘  ÄWd  ¿0 e) WriteRaw8 Ç    ÄÊ  €   ÄJ’  Äìd  
+¿0 j) ReadRaw16 Ñ   ÄÎ  ‹   Ä–’  Ä‘d  ¿0 r) WriteRaw16 Ç    Ä  ›   Äe÷  Äe  
+¿0 w) ReadRaw Ü   Äı  ﬁ   ÄÎ÷  ÄQe  ¿0 ) WriteRaw Ç    Ä˙  ﬂ   ÄÄ◊  Äçe  
+¿0 Ñ) ReadRaw64 à   Äˇ  ‡   Äÿ  ÄŒe  ¿0 å) WriteRaw64 Ç    Ä  ·   Äõÿ  Ä
+f  
+¿0 ö9 TpInitializeCallbackEnviron Ç    Ä3  ‚   Ä˝Î  Äıl  @¿0 ß9 TpSetCallbackThreadpool Ç    Ä6  „   Ä∏Ì  Ä%m  ¿0 Ø9 TpSetCallbackCleanupGroup Ç    Ä9  ‰   Ä:Ó  Ämm  ¿0 ø9 TpSetCallbackLongFunction Ç    Ä3  Â   Ä‰Ô  Äpn  ¿0 ≈9 TpSetCallbackRaceWithDll Ç    Ä<  Ê   Äm  Ä†n  ¿0 —9 TpSetCallbackPriority Ç    Ä?  Á   ÄqÒ  ÄEo  ¿0 ’9 TpSetCallbackPersistent Ç    Ä3  Ë   ÄÛÒ  Äëo  ¿0 Ÿ9 TpDestroyCallbackEnviron Ç    Ä3  È   Ä|Ú  Ä¡o  ¿0 : GetCurrentFiber à   Ä0  Í   ÄhÛ  Ä˛o  	¿0  i„  hasTimer Ü   ÄY  Î   Är˛  ÄÉs  -H BuG≤GíQ\„ f„ r„ t„ w„  beginTimer Ç    Ä  Ï   Ä_  ÄÏs  H ó$ô$\„ ]„ ^„ _„ f„ Ä„  timeDiff à   Äu  Ì   ÄS ÄGt  @ à„  endTimer Ç    Ä  Ó   Ä( Äæt  6H 
+îó$ô$\„ ]„ ^„ _„ f„ Ä„ ê„ ù„  isNumber Ü   Ä“  Ô   Äµ Äxu  Äâ H"ø„  shellstaticFunc Ç    Äb     Ä ÄÖv  Hu∏„ »„  strlen30 Ü   Äé  Ò   Ä	 Ä·v  @ “„  local_getline à   Äë  Ú   ÄÓ	 Ä5w  Ä⁄ H˜
+¥zí„ »„ €„ Ó„  one_input_line à   ÄP  Û   Ä: Äsx  <HA£îó„ ò„ “„ Ù„ ˘„  utf8_printf Ç @  ÄØ  Ù   Ä Ä(y  R(AÀ·ezì„ ˛„ A‰  shellLog Ç    Ä^  ı   Äu Ä◊y  )H£˘„ F‰ M‰  output_hex_blob Ç    Äœ  ˆ   Ä  ÄUz  9HHU‰ V‰ W‰ \‰  output_quoted_string Ç    Ä√  ˜   Äa Äˇz  Ä¢ H	Hë$ï$Ù„ ˘„ W‰ k‰ n‰ q‰ v‰  output_c_string Ç    Ä√  ¯   Ä Ä|  Äó H√HI"á‰ å‰  output_html_string Ç    Ä√  ˘   ÄÑ  Ä}  Ä¬ H	H˘„ ï‰ ó‰ ö‰ ù‰ †‰ £‰ ¶‰ Æ‰  output_csv Ç    Ä∆  ˙   ÄÛ% Ä~  ÄÃ H»„ Ù„ ˘„ ß‰ Õ‰  shell_callback Ü   Ä÷  ˚   Ä†+ ÄQ  ÄZH&Hèìë$ï$ù„ »„ Ù„ ˘„ !M‰ \‰ v‰ å‰ ï‰ Æ‰ ›‰ Â #Â .Â /Â 0Â 5Â <Â AÂ HÂ KÂ LÂ MÂ NÂ PÂ QÂ \Â ^Â _Â `Â aÂ eÂ rÂ ÄÂ  callback Ü   Ä4  ¸   Äù] ÄÎÜ  HÕ‰ áÂ  set_table_name Ç    Ä˛  ˝   Ä_^ Ä`á  ÄÒ H˜˝YAH"A"õÂ •Â  appendText à   Ä+  ˛   Äkd Äùà  Äπ H
+»„ ¿Â  run_table_dump_query Ü   Ä1  ˇ   Äåi ÄÒâ  ÄHH“Ùfàß∂Ù„ ˘„ ï‰ —Â ‘Â ŸÂ ⁄Â ﬂÂ  save_err_msg à   Ä  Ä!  Ä q ÄÅã  .Hr“»„ ÍÂ  display_stats Ü   Ä  Å!  Äyr ÄÍã  Ä˚HHT	g
+mÔÂ Â ÚÂ ÛÂ ıÂ ˆÂ ˜Â ¯Â ˘Â ¸Â ˝Â ˛Â ˇÂ  Ê Ê Ê Ê Ê Ê Ê Ê 	Ê 
+Ê Ê  display_scanstats Ç    Ä  Ç!  ÄÑ Äπå  @ Ê  str_in_array Ü   Ä  É!  Ä¨Ñ Ä˙å  %@ "Ê  explain_data_prepare Ç    Ä  Ñ!  Ä˝Ö Äç  Ä‚H"xzfjàüßπ˜9‰ Ê 9Ê IÊ JÊ KÊ LÊ MÊ NÊ OÊ PÊ QÊ RÊ SÊ TÊ UÊ \Ê ]Ê ^Ê _Ê `Ê aÊ bÊ cÊ jÊ  explain_data_delete Ç    Ä  Ö!  ÄSí ÄOê  Hz{Ê  shell_exec Ü   Ä  Ü!  Äeì Äuê  ÄoHHbrzÙfjàüßØ∂ )"˘„ ï‰ ﬂÂ ÍÂ Ê "Ê jÊ ±Ê ≥Ê µÊ ∂Ê πÊ ’Ê  dump_callback Ü   Ä4  á!  Ä‚• ÄÆî  ÄÙH!˜eHbzÙàß∂¸˘„ •Â ¿Â ±Ê ÏÊ ÌÊ Ê ÒÊ ÙÊ ˜Ê ˘Ê ˙Ê ˚Ê ˝Ê ˛Ê ˇÊ Á Á Á Á 	Á Á Á Á  run_schema_dump_query Ü   Ä‚  à!  Ä:≥ Änó  Ä† H˜˝H[iz»„ ˘„ ’Ê Á Á Á !Á .Á  readfileFunc Ç    Äb  â!  Ä≥∑ ÄFò  oHìæ‘Ó¯9rz$O7Á AÁ  writefileFunc Ç    Äb  ä!  Ä‰∫ Ä0ô  bHìæ$mKÁ SÁ  open_db Ç    Ä©  ã!  Ä≤Ω Äö  Äµ HYA¨Õ“—6î„ ø„ ˘„ .Á AÁ WÁ ZÁ \Á ]Á `Á  resolve_backslashes Ç    ÄÓ  å!  Ä7¬ Äêö  Ä@ ÖÁ  hexDigitValue Ü   Än  ç!  ÄÆ… Ä;ú  -@ åÁ  integerValue à   Äu  é!  Ä)À Ä{ú  Ä© HÛ"ÖÁ ìÁ †Á °Á ¢Á £Á §Á •Á ¶Á ßÁ ®Á ±Á  booleanValue Ü   Ä¸  è!  Ä¡œ Ä®ù  Äë H
+AÛ˘„ ÖÁ åÁ ¿Á ¡Á ƒÁ ≈Á ∆Á …Á  output_file_close Ç    Ä∂  ê!  Ä‹” Ävû  HAìŒÁ  output_file_open à   Ä  ë!  Ä≥‘ Ä¶û  OHAæ˘„ KÁ ƒÁ ”Á ÷Á ⁄Á ﬂÁ  sql_trace_callback Ç    Ä<  í!  Ä0◊ Ä7ü  3H˘„ ËÁ ÍÁ  test_breakpoint Ç    Ä  ì!  ÄΩÿ Ä√ü  @ ÌÁ ˝Á  import_append_char Ç    ÄÄ  î!  Ä'Ÿ ÄÍü  VHYAHxË Ë  csv_read_one_field à   Ä  ï!  Äa€ Ä;†  ÄDHA¶ï„ ˘„ ˝Á "Ë $Ë *Ë  ascii_read_one_field à   Ä  ñ!  ÄÕ‰ Ä¢  pH¶ï„ ˝Á ;Ë  tryToCloneData Ç    Äï  ó!  Ä)Ë Ä´¢  Ä:H&A£Hîbirz–“Ù)14;fàèìõ£ßØ∂π˘„ ˇÊ Ë \Ë ^Ë `Ë aË iË kË lË nË pË |Ë  tryToCloneSchema Ç    Äù  ò!  Ä'˜ Ä\•  ÄÄHA£î[bz–“Ùàß∂˘„ çË èË êË íË îË ñË ûË  tryToClone Ç    Ä˛  ô!  Ä! Äß  Äö HAG[¨“K#˘„ ;Ë |Ë £Ë ¶Ë ßË ®Ë ©Ë ™Ë ´Ë ¨Ë ØË  output_reset Ç    Ä  ö!  Ä Ä£ß  5HA…Á ∑Ë  db_int Ü   Ä‚  õ!  Äü Ä·ß  3HÙàü∂æË  get2byteInt Ü   Äﬁ  ú!  Ä. Ä]®  ` ¬Ë  get4byteInt Ü   Äﬁ  ù!  Ä◊ ÄÉ®  )`  Ë  shell_dbinfo_command Ü   Ä  û!  ÄŒ	 Ä©®  ÄπH3AHbzHÙ„ ˘„ #Â SÁ ∑Ë æË ¬Ë –Ë ’Ë ÈË ÍË ÎË ÏË ÌË ÓË ÔË Ë ÒË ÚË ÛË ÙË ıË ˆË ˜Ë ¯Ë ˘Ë ˙Ë ˚Ë ¸Ë ˝Ë ˛Ë ˇË È È È È 	È 
+È È È È È È È È È È  shellDatabaseError Ü   Ä_  ü!  ÄÍ Ä´  HA“˘„  È "È  shellNomemError Ü   ÄY  †!  ÄÕ ÄE´  H AHõÂ (È  do_meta_command Ü   ÄS  °!  Äl ÄT´  ÄáHÄF  YÄ	f¯e=°AMìæHEî35G[Pbirxzô¨“	ﬁÙ4;fàß∂π·Â1HK◊‹ﬂ˜¸)"d"ë$ï$ó$i„ ë„ ï„ ó„ ò„ ∏„ »„ 
+Ù„ ˘„ 30‰ 2‰ 3‰ 5‰ 6‰ 7‰ 8‰ 9‰ :‰ v‰ ï‰ ó‰ Õ‰ #Â .Â _Â ÄÂ 	áÂ õÂ ¿Â ÍÂ {Ê ±Ê ÒÊ ˝Ê Á "Á 'Á 7Á SÁ `Á åÁ ±Á ¿Á ƒÁ …Á ŒÁ ”Á ⁄Á ﬂÁ ÍÁ ˝Á Ë *Ë ûË ¨Ë ØË  Ë ˇË È È È  È 
+"È ÅÈ ÔÈ Í Í "Í 'Í )Í 1Í 4Í 7Í <Í ?Í BÍ EÍ HÍ KÍ NÍ OÍ SÍ VÍ XÍ YÍ ZÍ [Í ^Í _Í `Í aÍ bÍ dÍ eÍ fÍ gÍ jÍ mÍ pÍ sÍ vÍ }Í áÍ âÍ äÍ åÍ èÍ êÍ ëÍ íÍ ìÍ îÍ ïÍ ñÍ ôÍ úÍ üÍ ¢Í §Í ¶Í ®Í ™Í ¨Í ÆÍ ±Í ≤Í ∂Í πÍ ∫Í ªÍ æÍ øÍ ¡Í ∆Í  Í œÍ —Í ‘Í ÷Í ⁄Í €Í ﬁÍ ·Í ‚Í ÊÍ ÈÍ ÍÍ ÎÍ ÏÍ ÌÍ ÓÍ ÔÍ Í ÒÍ ÚÍ ÛÍ ÙÍ ˜Í ˙Í ˛Í  Î Î Î 
+Î Î Î Î Î Î "Î #Î (Î )Î *Î -Î 0Î 3Î :Î ;Î =Î AÎ DÎ GÎ KÎ NÎ RÎ WÎ ZÎ \Î aÎ fÎ qÎ tÎ wÎ xÎ {Î ÄÎ ÅÎ ÇÎ ÖÎ ÜÎ âÎ äÎ èÎ íÎ ïÎ õÎ úÎ ûÎ üÎ †Î °Î £Î ¶Î ®Î ©Î ™Î ´Î ¨Î ≠Î ÆÎ ØÎ ∂Î πÎ ∫Î ºÎ ¡Î ¬Î ƒÎ  Î “Î ’Î ÷Î ◊Î ÿÎ ŸÎ ⁄Î €Î ‹Î ›Î ﬁÎ ﬂÎ ‡Î ·Î ‚Î „Î ‰Î ÂÎ ÈÎ ÓÎ ÚÎ ÛÎ ˜Î ˚Î Ï Ï Ï 
+Ï Ï Ï Ï Ï Ï Ï Ï  Ï !Ï "Ï #Ï &Ï (Ï )Ï +Ï .Ï 3Ï :Ï  line_contains_semicolon Ü   Äô  ¢!  Ä>ﬂ ÄÄ»  @ CÏ  _all_whitespace Ü   Äé  £!  ÄR‡ Ä¯»  jH)"UÏ  line_is_command_terminator Ü   Äé  §!  ÄŸ„ Ä¨…  OH)"d"CÏ dÏ  line_is_complete Ü   ÄV  •!  ÄÊ Ä   /HC'Á  process_input Ü   Ä&  ¶!  ÄÉÁ Äa   ÄhH)˜
+YA£Hî<>Ciz“)"w„ à„ ë„ í„ ï„ »„ Ó„ ˘„ Õ‰ #Â õÂ {Ê ±Ê SÁ `Á ØË (È :Ï CÏ UÏ dÏ éÏ úÏ ùÏ †Ï ¢Ï ®Ï ™Ï  find_home_dir à   ÄY  ß!  Äî¯ ÄõÕ  Äç H ˝\i»„ AÂ ≠Ï ∂Ï ∏Ï ∫Ï ªÏ æÏ ≈Ï  process_sqliterc Ç    Ä˛  ®!  Ä˝ ÄóŒ  mHAìæHbzí„ ˘„ 'Á 7Á ™Ï –Ï —Ï ‘Ï ÿÏ  usage Ç    Ä‹  ©!  Ä?  ÄÇœ  4H	YAHñ„ ˘„ ’Ï ⁄Ï ›Ï ﬁÏ ·Ï  main_init Ç    Ä  ™!  Ä¿ Ä≈œ  |H	ió„ ò„ A‰ #Â „Ï ‰Ï ÂÏ ËÏ  printBold Ç    Äv  ´!  Ä¶ ÄÓœ  /HîØ;Ké ∫é Ù„ ÛÏ  cmdline_option_value à   Ät  ¨!  Ä˜ ÄZ–  3HYA˘„ ˆÏ ˚Ï  main Ü   Äz  ≠!  Äb Ä∏–  ÄÒlW˜˝
+YALHî35GizK#ã#ë$ë„ í„ ì„ ñ„ »„ Ù„ ˘„ Õ‰ _Â áÂ {Ê 'Á SÁ åÁ Ë  È (È (Î )Î †Ï ™Ï ≈Ï ÿÏ ·Ï ËÏ ÛÏ $Ì %Ì .Ì /Ì 0Ì 1Ì 4Ì 7Ì :Ì =Ì DÌ IÌ OÌ QÌ TÌ VÌ ^Ì aÌ dÌ gÌ jÌ mÌ vÌ yÌ |Ì Ì ÇÌ ÖÌ àÌ ãÌ éÌ ëÌ ¢Ì ≠Ì ØÌ ∞Ì πÌ ºÌ æÌ øÌ ¿Ì √Ì  E√ BINDSTRING_DOWNLOADPATH Ä|  Ü   ëŒ PIDMSI_STATUS_DRAFT Ä~  Ü   Èº BINDSTATUS_BEGINDOWNLOADCOMPONENTS ÄÄ  Ü   ¯¢ NODE_COMMENT ÄÇ  Ü   ’__crt_locale_pointers  Ä*   –__crt_locale_pointers  Ä*   ıô tagDESCKIND  ÄÑ  ˝ malloc à
+ Ä  ÄŸ  ∑!   í≈ _tagPARSEACTION  ÄÜ   É%CHAR  p ’Ï $zOptions Ç Ä&  Ä! Äá    ∂ñ VAR_CONST Äâ  Ü   ≥û CHANGEKIND_DELETEMEMBER Äã  Ü  g sqlite3_db_status Ü   Äı  ª!   Ω BINDSTATUS_PROXYDETECTING ÄÄ  Ü    =_iobuf  Ä-   H√ BINDSTRING_PROXY_USERNAME Ä|  Ü   ˛¢ tagXMLEMEM_TYPE  Äç  ü sqlite3_column_int Ü   ÄÃ  Ω!  π sqlite3_reset Ü   ÄË  æ!   ö≈ PARSE_DECODE_IS_ESCAPE ÄÜ  Ü   Ω BINDSTATUS_64BIT_PROGRESS ÄÄ  Ü 8 1 sqlite3_bind_int64 Ü   ÄÉ  ø!   òñ FUNC_VIRTUAL Äè  Ü    §∆ FEATURE_ADDON_MANAGEMENT Äë  Ü   î≈ PARSE_FRIENDLY ÄÜ  Ü   ˙$INT_PTR   F√ BINDSTRING_ROOTDOC_URL Ä|  Ü  \ getenv à
+   Äå  ¬!   ∞≈ QUERY_REFRESH Äì  Ü   Esqlite3_uint64  # ÇÓ COINITBASE_MULTITHREADED Äï  Ü    ôñ FUNC_PUREVIRTUAL Äè  Ü  T sqlite3_status Ü   ÄÔ  ∆!  bP lstrcmpW Ü
+   ÄJ  «!   ’ VT_I1 Äó  Ü   Ìº BINDSTATUS_SENDINGREQUEST ÄÄ  Ü   z%PLONG64  Ä   Ñ%SHORT   ˙ô DESCKIND_IMPLICITAPPOBJ ÄÑ  Ü   8√ BINDSTRING_PASSWORD Ä|  Ü  |x CharUpperW à
+   ÄB   !   ‰º BINDSTATUS_CONNECTING ÄÄ  Ü  õ sqlite3_column_double à   Ää  À!  ≈ __stdio_common_vfprintf_s Ü
+   ÄT  Ã!   Îº BINDSTATUS_ENDDOWNLOADCOMPONENTS ÄÄ  Ü 	  9Ê $?explainCols@?8??explain_data_prepare@@9@9 à @Ä Ä  \Ê ]Ê ^Ê _Ê `Ê aÊ bÊ cÊ  ˘¢ NODE_DOCUMENT ÄÇ  Ü 	  \ø CIP_NEED_REBOOT Äô  Ü  z __stdio_common_vsscanf Ü
+   Ät  Œ!   ˚¢ NODE_DOCUMENT_FRAGMENT ÄÇ  Ü   ≠ı tagGLOBALOPT_EH_VALUES  Äõ  ¸ sqlite3_strglob Ü   Ä   —!   ±≈ QUERY_RECOMBINE Äì  Ü   ¥û CHANGEKIND_SETNAMES Äã  Ü  lP lstrcmpiW Ü
+   ÄJ  “!   ’ VT_RECORD Äó  Ü $ ‘ fread à
+   ÄJ  ”!   Ω BINDSTATUS_COOKIE_SENT ÄÄ  Ü "  @√ BINDSTRING_URL Ä|  Ü   %Ω BINDSTATUS_RESERVED_9 ÄÄ  Ü B  éñ CC_PASCAL Äù  Ü   "Á $zHelp Ç Ä,  Ä! Äû   »›  uaw_lstrcmpiW Ü   ÄO  ’!  " isdigit Ü
+   Äy  ÷!   7√ BINDSTRING_USERNAME Ä|  Ü   ü≈ PARSE_SCHEMA ÄÜ  Ü   Ésize_t  #r sqlite3_malloc64 à   ÄŸ  ◊!   ¥≈ QUERY_IS_CACHED Äì  Ü 	  +ç COORD  Ä†  ‹ sqlite3_backup_step Ü   Ä˜  Ÿ!   ©∆ FEATURE_GET_URL_DOM_FILEPATH_UNENCODED Äë  Ü   Ω BINDSTATUS_CACHECONTROL ÄÄ  Ü 0  sqlite3_value_blob à   ÄO  ⁄!  ⁄›  uaw_wcsicmp Ü   ÄO  €!   ÌÁ $?nCall@?1??test_breakpoint@@9@9 Ü Ä t  Ñø __MIDL_IUri_0001  Ä¢   ≠∆ FEATURE_DISABLE_LEGACY_COMPRESSION Äë  Ü   π≈ QUERY_IS_SAFE Äì  Ü   Ω BINDSTATUS_COOKIE_SUPPRESSED ÄÄ  Ü $  F:FILETIME  Än   Yø CIP_TRUST_VERIFICATION_COMPONENT_MISSING Äô  Ü   ˆ¢ NODE_ENTITY ÄÇ  Ü   ß∆ FEATURE_SAFE_BINDTOOBJECT Äë  Ü   -ù SYS_WIN32 Ä§  Ü  “ sqlite3_errmsg à   Ä‰  ﬁ!   Å9PTP_CLEANUP_GROUP_CANCEL_CALLBACK  Ä   &Ω BINDSTATUS_RESERVED_A ÄÄ  Ü C  ñø Uri_PROPERTY_HOST_TYPE Ä¢  Ü   r9TP_CALLBACK_PRIORITY_INVALID Ä$  Ü   ú∆ FEATURE_WEBOC_POPUPMANAGEMENT Äë  Ü   ˘ô DESCKIND_TYPECOMP ÄÑ  Ü   û∆ FEATURE_DISABLE_MK_PROTOCOL Äë  Ü  ¶ strnlen à
+   Ä  ﬂ!   çŒ PIDMSI_STATUS_VALUE  Ä~   Ë%HANDLE  Ä   Ω BINDSTATUS_P3P_HEADER ÄÄ  Ü , ¯ strchr à
+   Ä,  ‡!  )" isspace Ü
+   Äy  ·!  è sqlite3_column_blob à   Ä   ‚!   ∂û CHANGEKIND_GENERAL Äã  Ü   Ù¢ NODE_CDATA_SECTION ÄÇ  Ü   îŒ PIDMSI_STATUS_REVIEW Ä~  Ü   óñ tagFUNCKIND  Äè   ï9TP_CALLBACK_ENVIRON_V3  Ä&  uG FreeLibrary Ü
+   Äk  „!   ˆº BINDSTATUS_PROTOCOLCLASSID ÄÄ  Ü  ô sqlite3_trace à   Ä?  ‰!   î„ $globalDb à Ä Ä•    Ω BINDSTATUS_POLICY_HREF ÄÄ  Ü +  Bsqlite_int64   m9PTP_POOL  Ä   f„ $getProcessTimesAddr à Ä Ä[    ó$$enableTimer Ü Ä t  ˙¢ NODE_DOCUMENT_TYPE ÄÇ  Ü 
+  ¸$UINT_PTR  # ç%LPWSTR  Äq   Ω BINDSTATUS_RESERVED_1 ÄÄ  Ü : à sqlite3_step Ü   ÄË  Â!   ÔÈ $?aCtrl@?OF@??do_meta_command@@9@9 à Ä   Ä! ÄN  ÷Î ◊Î ÿÎ ŸÎ ⁄Î €Î ‹Î ›Î ﬁÎ ﬂÎ ‡Î ·Î ‚Î „Î ‰Î ÂÎ  Wø CIP_OLDER_VERSION_EXISTS Äô  Ü   _popen à
+   ÄB  Ê!   Ω BINDSTATUS_SSLUX_NAVBLOCKED ÄÄ  Ü 5 ˜ free Ç
+    ÄÅ  Á!   Ø∆ FEATURE_XMLHTTP Äë  Ü   ˛º BINDSTATUS_CLSIDCANINSTANTIATE ÄÄ  Ü   ¨∆ FEATURE_DISABLE_NAVIGATION_SOUNDS Äë  Ü   Ω BINDSTATUS_COOKIE_STATE_UNKNOWN ÄÄ  Ü %  SaDISPLAYCONFIG_SCANLINE_ORDERING_INTERLACED Ä¶  Ü   +ù tagSYSKIND  Ä§   ò„ $continuePrompt Ç  ! Ä¶   ?FILE  Ä-  ≤G GetProcAddress à
+   Äg  Í!   sqlite3_value  Ä{   ÅÈ $?aLimit@?GN@??do_meta_command@@9@9 à Ä¿   Ä! ÄI  2‰ ÍÍ ÎÍ ÏÍ ÌÍ ÓÍ ÔÍ Í ÒÍ ÚÍ ÛÍ ÙÍ  ±û tagCHANGEKIND  Äã  6 sqlite3_enable_load_extension Ü   Äk  Î!   ô∆ FEATURE_MIME_HANDLING Äë  Ü   ∫≈ QUERY_USES_HISTORYFOLDER Äì  Ü   é%PWSTR  Äq  – __stdio_common_vfscanf Ü
+   ÄT  Ï!   êñ CC_STDCALL Äù  Ü   Ω BINDSTATUS_DISPLAYNAMEAVAILABLE ÄÄ  Ü 4  Áº BINDSTATUS_DOWNLOADINGDATA ÄÄ  Ü   :√ BINDSTRING_UA_COLOR Ä|  Ü   Tø CIP_DISK_FULL Äô  Ü    èñ CC_MACPASCAL Äù  Ü   5√ BINDSTRING_EXTRA_URL Ä|  Ü  j sqlite3_column_name à   Ä   Ì!   ?√ BINDSTRING_POST_DATA_MIME Ä|  Ü   îø Uri_PROPERTY_USER_NAME Ä¢  Ü   sqlite3_value_bytes Ü   ÄT  Ó!   Asqlite3  Ä§   •∆ FEATURE_PROTOCOL_LOCKDOWN Äë  Ü   Œsqlite3_backup  ÄÒ  L setvbuf Ü
+   Äq  Ô!   ë„ $bail_on_error Ü Ä t  I’ TYSPEC_MIMETYPE Ä®  Ü   Ô¢ tagDOMNodeType  ÄÇ   ˜ô DESCKIND_FUNCDESC ÄÑ  Ü   
+Ω BINDSTATUS_COOKIE_STATE_PROMPT ÄÄ  Ü (  ì%LPCWSTR  Ä   fç _CONSOLE_SCREEN_BUFFER_INFO  Äk   Ω BINDSTATUS_ACCEPTRANGES ÄÄ  Ü !  Òº BINDSTATUS_BEGINSYNCOPERATION ÄÄ  Ü   õñ FUNC_STATIC Äè  Ü   Úº BINDSTATUS_ENDSYNCOPERATION ÄÄ  Ü   °∆ FEATURE_RESTRICT_ACTIVEXINSTALL Äë  Ü 
+ À fputs Ü
+   Äò  Ò!   á tagApplicationType  Ä™   œ__crt_locale_data_public  ÄÑ   À__crt_locale_data_public  ÄÑ   ,ù SYS_WIN16 Ä§  Ü   æ›  uaw_CharUpperW à   ÄG  Ù!  O sqlite3_result_blob Ç    ÄM  ı!   ≠≈ QUERY_TIME_OF_LAST_CHANGE Äì  Ü   À$BOOL  t †ø Uri_HOST_IPV4 Ä¨  Ü   Æ∆ FEATURE_FORCE_ADDR_AND_STATUS Äë  Ü  3 sqlite3_libversion à   ÄA  ˜!  Ä	 strtol Ü
+   Ä2  ¯!  €„  sqlite3_win32_mbcs_to_utf8 à   Äå  ˘!   èŒ PIDMSI_STATUS_NEW Ä~  Ü   º BINDSTATUS_CACHEFILENAMEAVAILABLE ÄÄ  Ü   ó%LPCUWSTR  ÄM   ÅÓ tagCOINITBASE  Äï   y%LONG64   D√ BINDSTRING_XDR_ORIGIN Ä|  Ü  íQ LoadLibraryW à
+   Ä`  ˙!  ∫ __stdio_common_vswprintf_p Ü
+   Ä8  ˚!  } __stdio_common_vsprintf Ü
+   Ä[  ¸!  Õ sqlite3_errcode Ü   Ä_  ˝!   ïÃ __MIDL_IGetBindHandle_0001  ÄÆ    Ω BINDSTATUS_DIRECTBIND ÄÄ  Ü   L’ TYSPEC_PACKAGENAME Ä®  Ü   ó≈ PARSE_DOCUMENT ÄÜ  Ü   \„ $hProcess à   Ä   Ì%HRESULT   -ç _SMALL_RECT  Ä∞   ùø __MIDL_IUri_0002  Ä¨   9… URLZONE_TRUSTED Ä≤  Ü   ¶∆ FEATURE_HTTP_USERNAME_PASSWORD_DISABLE Äë  Ü   [0PowerUserMaximum Ä¥  Ü   ´≈ _tagQUERYOPTION  Äì  1 sqlite3_load_extension Ü   Ä  Ç"  O _errno à
+   Ä  É"   Ëº BINDSTATUS_ENDDOWNLOADDATA ÄÄ  Ü  ì sqlite3_column_bytes Ü   ÄÃ  Ñ"  ë __stdio_common_vswprintf Ü
+   Ä8  Ö"   =ñ TKIND_UNION Ä∂  Ü   íñ CC_SYSCALL Äù  Ü  e sqlite3_vmprintf à   Äï  á"   Ò¢ NODE_ELEMENT ÄÇ  Ü   ß‰ $needCsvQuote Ç Ä   Ä Ä∑    H’ TYSPEC_FILEEXT Ä®  Ü  T! __pctype_func à
+   Äâ  à"   J’ TYSPEC_FILENAME Ä®  Ü   ‰ ShellState  Ä¨   ‰ ShellState  Ä¨   fwrite à
+   ÄR  â"   ìñ CC_MPWCDECL Äù  Ü   Âº BINDSTATUS_REDIRECTING ÄÄ  Ü  Â sqlite3_get_autocommit Ü   Ä_  ä"  4 sqlite3_bind_null Ü   ÄÃ  ã"   ∏„ $zShellStatic à Ä Ä   H sqlite3_file_control Ü   Ä¨  å"   sqlite3_vfs_find à   Ä»  ç"   “$PBYTE  Ä    Ü%WCHAR  q :ñ TKIND_DISPATCH Ä∂  Ü   ∆errno_t  t £≈ PARSE_SECURITY_DOMAIN ÄÜ  Ü  — sqlite3_create_function Ü   Äh  é"  K sqlite3_test_control Ü@  Ä5  è"  9 rewind Ç
+    Ä∂  ê"  e strncmp Ü
+   Ä%  ë"  ∑ _fileno Ü
+   Äí  í"   Å%PVOID  Ä   ¢ NODE_INVALID ÄÇ  Ü    ù≈ PARSE_MIME ÄÜ  Ü  £ sqlite3_column_int64 à   ÄÖ  ì"   ≥ñ tagVARKIND  Äâ   êŒ PIDMSI_STATUS_PRELIM Ä~  Ü   ë%LPUWSTR  ÄE   ≠Ï $?home_dir@?1??find_home_dir@@9@9 à Ä Äp     sqlite3_strlike Ü   Ä  î"   ¢≈ PARSE_LOCATION ÄÜ  Ü   £ XMLELEMTYPE_DTD Äç  Ü   ˚º BINDSTATUS_LOADINGMIMEHANDLER ÄÄ  Ü   < ?_OptionsStorage@?1??__local_stdio_scanf_options@@9@9 à  ! #ﬁ sqlite3_limit Ü   Ä  ï"   Zø CIP_EXE_SELF_REGISTERATION_TIMEOUT Äô  Ü   ï≈ PARSE_SECURITY_URL ÄÜ  Ü   õ≈ PARSE_PATH_FROM_URL ÄÜ  Ü 	 … wcstok à
+   Ä  ñ"   çñ CC_MSCPASCAL Äù  Ü  ˛„  sqlite3_win32_utf8_to_mbcs à   Äå  ó"  b sqlite3_mprintf à@  Ä  ò"  ˛! _isctype_l Ü
+   Äå  ô"   F’ tagTYSPEC  Ä®  [ sqlite3_exec Ü   Ä7  ö"   ¯º BINDSTATUS_VERIFIEDMIMETYPEAVAILABLE ÄÄ  Ü   Ω BINDSTATUS_SESSION_COOKIE_RECEIVED ÄÄ  Ü -  ó9PTP_CALLBACK_ENVIRON  Ä   @&BOOLEAN    Uø CIP_ACCESS_DENIED Äô  Ü   ñ„ $Argv0 à   Äp   öñ FUNC_NONVIRTUAL Äè  Ü   Ω BINDSTATUS_SNIFFED_CLASSIDAVAILABLE ÄÄ  Ü 7 ¥ fgets à
+   Ää  õ"   ï„ $seenInterrupt Ü Ä Ä|   A" isalnum Ü
+   Äy  ú"   7ñ TKIND_RECORD Ä∂  Ü   ˇ¢ XMLELEMTYPE_ELEMENT Äç  Ü    Û¢ NODE_TEXT ÄÇ  Ü   *Ω BINDSTATUS_RESERVED_E ÄÄ  Ü G ° strncpy à
+   Ä#  ù"   µñ VAR_STATIC Äâ  Ü   mç PCONSOLE_SCREEN_BUFFER_INFO  Äd   j9PTP_SIMPLE_CALLBACK  Ä   )Ω BINDSTATUS_RESERVED_D ÄÄ  Ü F  ;ñ TKIND_COCLASS Ä∂  Ü   }%DWORD64  #≠ __stdio_common_vsnwprintf_s Ü
+   Ä<  û"   ú≈ PARSE_URL_FROM_PATH ÄÜ  Ü 
+ ô __stdio_common_vsnprintf_s Ü
+   Äb  ü"   (ç _COORD  Ä†  À›  uaw_lstrlenW Ü   ÄU  †"   ´∆ FEATURE_SSLUX Äë  Ü  K# _access Ü
+   Äô  °"  u sqlite3_result_text Ç    ÄÑ  ¢"   ’ VT_VARIANT Äó  Ü   p9TP_CALLBACK_PRIORITY_NORMAL Ä$  Ü   éŒ PIDMSI_STATUS_NORMAL Ä~  Ü   ã# _isatty Ü
+   Äy  £"  ¡# _setmode Ü
+   Äï  §"   8… URLZONE_INTRANET Ä≤  Ü  · sqlite3_sleep Ü   Äy  •"   ¸º BINDSTATUS_CONTENTDISPOSITIONATTACH ÄÄ  Ü   ìŒ PIDMSI_STATUS_EDIT Ä~  Ü  f system Ü
+   Äé  ¶"    Ω BINDSTATUS_RESERVED_4 ÄÄ  Ü =  e„ GETPROCTIMES  Ä[  ∫ __stdio_common_vfprintf Ü
+   ÄT  ß"   ÔÁ ImportCtx  Ä{   ÓÁ ImportCtx  Ä{   6√ BINDSTRING_LANGUAGE Ä|  Ü   ∏û CHANGEKIND_CHANGEFAILED Äã  Ü   £ XMLELEMTYPE_DOCUMENT Äç  Ü   7 ?_OptionsStorage@?1??__local_stdio_printf_options@@9@9 à  ! # >√ BINDSTRING_POST_COOKIE Ä|  Ü   9ñ TKIND_INTERFACE Ä∂  Ü   Ω BINDSTATUS_SESSION_COOKIES_ALLOWED ÄÄ  Ü /  ;√ BINDSTRING_OS Ä|  Ü 	  ˇ‘ VARENUM  Äó   ’Ë $?aQuery@?1??shell_dbinfo_command@@9@9 à PÄ! ÄÏ  
+ıË ˆË ˜Ë ¯Ë ˘Ë ˙Ë ˚Ë ¸Ë ˝Ë ˛Ë Ω _invalid_parameter_noinfo Ç
+    Ä  ®"   ›‰ $?aExplainWidths@?8??shell_callback@@9@9 Ü  Ä! Ä‘    ¨≈ QUERY_EXPIRATION_DATE Äì  Ü  ¶ fgetc Ü
+   Äí  ©"   †≈ PARSE_SITE ÄÜ  Ü   ÷_locale_t  Ä    t9TP_CALLBACK_PRIORITY  Ä$   ]„ $ftKernelBegin Ü  ° Ä Än   _pclose Ü
+   Äí  ™"  ˜ sqlite3_strnicmp Ü   Ä˛  ´"   îñ CC_MPWPASCAL Äù  Ü   0’ VT_RESERVED Äó  Ü  Ä   lç CONSOLE_SCREEN_BUFFER_INFO  Äk  " isalpha Ü
+   Äy  ¨"  ä __stdio_common_vsprintf_s Ü
+   Ä[  ≠"   Ω BINDSTATUS_RESERVED_2 ÄÄ  Ü ;  ì„ $stdout_is_console Ü Ä t  G’ TYSPEC_CLSID Ä®  Ü    °ø Uri_HOST_IPV6 Ä¨  Ü  i sqlite3_snprintf à@  Ä;  Æ"  G sqlite3_close Ü   Ä_  Ø"   ∑û CHANGEKIND_INVALIDATE Äã  Ü   h… URLZONEREG_HKLM Äπ  Ü   ˇº BINDSTATUS_IUNKNOWNAVAILABLE ÄÄ  Ü   [ø CIP_UNSAFE_TO_ABORT Äô  Ü  x sqlite3_realloc64 à   Äá  ±"   ™∆ FEATURE_TABBED_BROWSING Äë  Ü   ò≈ PARSE_ANCHOR ÄÜ  Ü   Vø CIP_NEWER_VERSION_EXISTS Äô  Ü   ∂≈ QUERY_IS_CACHED_OR_MAPPED Äì  Ü   a9TP_VERSION  " ⁄%PSHORT  Ä   e9PTP_CALLBACK_INSTANCE  Ä   :FARPROC  Äe   ∏%LPCSTR  Ä   ≤∆ FEATURE_BLOCK_INPUT_PROMPTS Äë  Ü  Ù sqlite3_prepare_v2 Ü   Ä‡  ≤"  Û sqlite3_stricmp Ü   Ä   ≥"  – sqlite3_extended_errcode Ü   Ä_  ¥"   öø Uri_PROPERTY_ZONE Ä¢  Ü   ®≈ PSU_DEFAULT Äª  Ü   ≤≈ QUERY_CAN_NAVIGATE Äì  Ü   PaDISPLAYCONFIG_SCANLINE_ORDERING  Ä¶    $DWORD  " .ù SYS_MAC Ä§  Ü   8ñ TKIND_MODULE Ä∂  Ü   putc Ü
+   Äπ  ∂"   ⁄5ReplacesCorHdrNumericDefines  ÄΩ   û≈ PARSE_SERVER ÄÜ  Ü   Ω BINDSTATUS_COMPACT_POLICY_RECEIVED ÄÄ  Ü # ¶ __stdio_common_vsprintf_p Ü
+   Ä[  ∏"  C sqlite3_complete Ü   Äé  π"  d" tolower Ü
+   Äy  ∫"   Æ≈ QUERY_CONTENT_ENCODING Äì  Ü   ëñ CC_FPFASTCALL Äù  Ü   ’ VT_I2 Äó  Ü  Ó fseek Ü
+   ÄE  ª"  ﬂ sqlite3_backup_finish Ü   Ä˙  º"   s%SIZE_T  # Ω BINDSTATUS_MIMETEXTPLAINMISMATCH ÄÄ  Ü 2  ˝º BINDSTATUS_FILTERREPORTMIMETYPE ÄÄ  Ü   ñ∆ _tagINTERNETFEATURELIST  Äë   #Ω BINDSTATUS_RESERVED_7 ÄÄ  Ü @ ” __stdio_common_vfwprintf Ü
+   Ä"  Ω"   ®∆ FEATURE_UNC_SAVEDFILECHECK Äë  Ü   H:LPFILETIME  ÄX  
+ realloc à
+ Ä  Äá  æ"   ):HMODULE  Ä]   †∆ FEATURE_SECURITYBAND Äë  Ü 	  ¢∆ FEATURE_VALIDATE_NAVIGATE_URL Äë  Ü   &:HINSTANCE__  Ä_  ; sqlite3_bind_text Ü   Äç  ø"   9√ BINDSTRING_UA_PIXELS Ä|  Ü  $ sqlite3_value_text à   Ä@  ¿"   Ç9_TP_CALLBACK_ENVIRON_V3  Ä&   Xø CIP_NAME_CONFLICT Äô  Ü   °≈ PARSE_DOMAIN ÄÜ  Ü   ú$$?clockVfs@?1??timeOfDay@@9@9 à Ä Äò   ¨ __stdio_common_vswscanf Ü
+   ÄK  ¡"   Ö%LONG   7… URLZONE_LOCAL_MACHINE Ä≤  Ü    
+’ VT_ERROR Äó  Ü 
+  ’ VT_UNKNOWN Äó  Ü   'Ω BINDSTATUS_RESERVED_B ÄÄ  Ü D  Isqlite3_destructor_type  ÄÇ   Êº BINDSTATUS_BEGINDOWNLOADDATA ÄÄ  Ü  √›  uaw_lstrcmpW Ü   ÄO  ¬"   ∞∆ FEATURE_DISABLE_TELNET_PROTOCOL Äë  Ü   Ω BINDSTATUS_SERVER_MIMETYPEAVAILABLE ÄÄ  Ü 6  î%PCWSTR  Ä   	’ VT_DISPATCH Äó  Ü 	  (Ω BINDSTATUS_RESERVED_C ÄÄ  Ü E  Ã$BYTE    sqlite3_initialize Ü   ÄY  √"   Ω BINDSTATUS_PERSISTENT_COOKIE_RECEIVED ÄÄ  Ü .  ì≈ PARSE_CANONICALIZE ÄÜ  Ü   £ XMLELEMTYPE_PI Äç  Ü   ¯ô DESCKIND_VARDESC ÄÑ  Ü   Íº BINDSTATUS_INSTALLINGCOMPONENTS ÄÄ  Ü   0‰ $modeDescr à PÄ Äæ  
+1‰ 2‰ 3‰ 4‰ 5‰ 6‰ 7‰ 8‰ 9‰ :‰  ≠va_list  Äp   ≥≈ QUERY_USES_NETWORK Äì  Ü   C:_FILETIME  Än   sqlite3_context  Ä~   <ñ TKIND_ALIAS Ä∂  Ü  m sqlite3_result_int64 Ç    ÄW  ƒ"   Óº BINDSTATUS_CLASSIDAVAILABLE ÄÄ  Ü   õ∆ FEATURE_WINDOW_RESTRICTIONS Äë  Ü   €%PLONG  Ä  P sqlite3_busy_timeout Ü   Äk  ≈"   ¥ñ VAR_PERINSTANCE Äâ  Ü   ì fclose Ü
+   Äí  ∆"   ïŒ PIDMSI_STATUS_PROOF Ä~  Ü  Ø sqlite3_column_type Ü   ÄÃ  «"   W0_USER_ACTIVITY_PRESENCE  Ä¥   Ω BINDSTATUS_COOKIE_STATE_LEASH ÄÄ  Ü )  Ω BINDSTATUS_COOKIE_STATE_ACCEPT ÄÄ  Ü &  ò%PCUWSTR  ÄM   Ùº BINDSTATUS_UPLOADINGDATA ÄÄ  Ü   Dsqlite3_int64   ˘º BINDSTATUS_CLASSINSTALLLOCATION ÄÄ  Ü   óÃ BINDHANDLETYPES_DEPENDENCY ÄÆ  Ü  £ fflush Ü
+   Äí  »"   £ XMLELEMTYPE_COMMENT Äç  Ü  > sqlite3_total_changes Ü   Ä_  …"  Ë _wcsicmp Ü
+   ÄJ   "   ö∆ FEATURE_MIME_SNIFFING Äë  Ü   sqlite3_vfs_register Ü   Ä∂  À"   Ú¢ NODE_ATTRIBUTE ÄÇ  Ü   6ñ TKIND_ENUM Ä∂  Ü    Õ$WORD  !f sqlite3_column_count Ü   ÄË  Ã"   sqlite3_bind_blob Ü   Äê  Õ"  A __acrt_iob_func à
+   Ä4  Œ"   "Ω BINDSTATUS_RESERVED_6 ÄÄ  Ü ?  ˆô DESCKIND_NONE ÄÑ  Ü    ’ VT_BSTR Äó  Ü   ˙º BINDSTATUS_DECODING ÄÄ  Ü   (:HINSTANCE  Ä]  ∂ sqlite3_finalize Ü   ÄË  œ"  ‰ __stdio_common_vfwscanf Ü
+   Ä"  –"   ˜º BINDSTATUS_ENCODING ÄÄ  Ü  m sqlite3_stmt_status Ü   Ä˘  —"   ù∆ FEATURE_BEHAVIORS Äë  Ü  æ fopen à
+   ÄB  “"   A√ BINDSTRING_IID Ä|  Ü   ±wchar_t  !< sqlite3_changes Ü   Ä_  ”"   ∏≈ QUERY_IS_SECURE Äì  Ü   	Ω BINDSTATUS_COOKIE_STATE_REJECT ÄÄ  Ü '  ó∆ FEATURE_OBJECT_CACHING Äë  Ü    K’ TYSPEC_PROGID Ä®  Ü   :… URLZONE_INTERNET Ä≤  Ü  z sqlite3_free Ç    ÄÅ  ‘"    £ XMLELEMTYPE_TEXT Äç  Ü   åñ CC_CDECL Äù  Ü   f… _URLZONEREG  Äπ  5 sqlite3_sourceid à   ÄA  ’"   Ûº BINDSTATUS_BEGINUPLOADDATA ÄÄ  Ü   ‚º tagBINDSTATUS  ÄÄ  ◊ sqlite3_backup_init à   ÄÙ  ÷"   Æ%PCHAR  Äp   Sø __MIDL_ICodeInstall_0001  Äô   Ω BINDSTATUS_RESERVED_3 ÄÄ  Ü < – __stdio_common_vfprintf_p Ü
+   ÄT  ◊"   |9PTP_CLEANUP_GROUP  Ä   4… tagURLZONE  Ä≤   Ω BINDSTATUS_RAWMIMETYPE ÄÄ  Ü   sqlite3_config Ü@  Ä5  ÿ"    %ULONG_PTR  # ˜¢ NODE_PROCESSING_INSTRUCTION ÄÇ  Ü  Ø; GetStdHandle à
+   Äa  Ÿ"   2√ tagBINDSTRING  Ä|  îP lstrlenW Ü
+   ÄR  ⁄"   ·5COR_VERSION_MAJOR_V2 ÄΩ  Ü   <√ BINDSTRING_USER_AGENT Ä|  Ü 
+  ˛$LONG_PTR   _„ $ftWallBegin à   B GetCurrentProcess à
+   Ä0  €"   Ø≈ QUERY_CONTENT_TYPE Äì  Ü   ß≈ _tagPSUACTION  Äª   ìÁ $?aMult@?1??integerValue@@9@9 à Äê   Ä! Ät  	†Á °Á ¢Á £Á §Á •Á ¶Á ßÁ ®Á  Ω BINDSTATUS_LAST ÄÄ  Ü 8  ≤û CHANGEKIND_ADDMEMBER Äã  Ü    ^sqlite3_io_methods  ÄŸ   Ïº BINDSTATUS_USINGCACHEDCOPY ÄÄ  Ü 
+  ó„âPNG
+
+   IHDR  ™  @   ÌP8   gAMA  ±è¸a    cHRM  z&  ÄÑ  ˙   ÄË  u0  Í`  :ò  pú∫Q<   bKGD      ˘Cª   	pHYs    “›~¸  0(IDATx⁄Ì›{ê,◊]Ô9›3”Ûÿ◊›{•´ßeIH≤ÖmÇ[2l∞∞Â76∂ca«∆ÿ°ÚG(*Q©§HU™íTÄîã@ $ò™T®JÄÿÿ?±l"ø-	[“}Íﬁ›ù›ŸŸyuüG˛8ß{zfgv˜ÍµgÆø◊hf{zz^uÁÎs˙wŒ/ΩÁïDDDÅí«˝ààà¬†""¢†1®àà(h*""
+ÉäààÇ∆†""¢†1®àà(h*""
+ÉäààÇ∆†""¢†1®àà(h*""
+ÉäààÇ∆†""¢†1®àà(h*""
+ÉäààÇ∆†""¢†1®àà(h*""
+ÉäààÇ∆†""¢†1®àà(h*""
+ÉäààÇ∆†""¢†1®àà(h*""
+ÉäààÇ∆†""¢†1®àà(h*""
+ÉäààÇ∆†""¢†1®àà(h*""
+ÉäààÇ∆†""¢†1®àà(h*""
+ÉäààÇ∆†""¢†1®àà(h*""
+ÉäààÇ∆†""¢†1®àà(h*""
+ÉäààÇ∆†""¢†1®àà(h*""
+ÉäààÇ∆†""¢†1®àà(h*""
+ÉäààÇ∆†""¢†1®àà(h*""
+ÉäààÇ∆†""¢†1®àà(h*""
+ÉäààÇ∆†""¢†1®àà(h*""
+ÉäààÇ∆†""¢†1®àà(h*""
+ÉäààÇ∆†""¢†1®àà(h*""
+ÉäààÇ∆†""¢†1®àà(h*""
+ÉäààÇ∆†""¢†1®àà(h*""
+ÉäààÇ∆†""¢†1®àà(h*""
+ÉäààÇ∆†""¢†1®àà(h*""
+ÉäààÇ∆†""¢†1®àà(h*""
+ÉäààÇ∆†""¢†1®àà(h*""
+ÉäààÇ∆†""¢†1®àà(h*""
+ÉäààÇ∆†""¢†≈«˝àûKµZÔy‡]¯æ€n√Nß3æ√˙+În!`¨ŸwÒg˘æâÌÄùÿY∏ç˛f˘Æ¸πé"ä"¥Z-|˙3ü≈«>Ò…„˛âûS*˙û«1Æ=u
+ßNûDµZ-∂œø-øœN‹e«4ıêÈ†rè∑BL>œ‘„-\ñÕ"•D´’¬˙˙â„˛âûs*˙ûÚé∑ΩØΩÔ5„)ÖÖµvﬂˆy€∫ûºÌoL©•fLqª|¸ÈcL≥÷‡ÅwΩﬂz¯|Â´_;ÓèíË9√sTÙ=„˘∑<Ôz«€∏J~-Ñk«!äøÀ)Âƒe÷∂Y˜ª«KH!ä‹E1q[Jâ(ää«ñoO^¢»˝ˇ ˜>.ƒ1ˇ?&}Ô`P—˜å_˛≈¢ŸhLÑ	ÄâPö˛{z;0πi”˚ï;ΩœQoó	¿µ∏nøıVºÂço8ÓèìË9√†¢Ô	˜˝‘´qÔÀ_678Ê]¥_9ËÊÌóﬂæ≤Pör9)%ﬁˆñ7‚ñÁ›|‹+—sÇAEWΩìÎÎ¯’_˙æRÓ†∞öG	¶ÈmÛˆ9hˇy¨µ®◊Îxﬂ{8ÓèñË9¡†¢´ﬁá>~ú<π>≥ïsî’¨‡:h€º„Ã€Á®˚óI)Òí}?~ÚU?~‹/—≥éAEWµ{_˛2‹˜SØ>“y£ßBG	∏Éˆôız œ⁄OJâwæ˝mX?¡íu∫∫1®Ë™U≠VÒ?ˇ>$I‡h]kW“: ∑•56Ôy:ÓQ^Îµ◊ú¬ªﬂ˘≥œÒ'KÙ‹bP—UÎ}Ôy wø‡ÆªÏÆ¥[o^ÀÏ∞∞:,ƒfù?;j7‡Ω/ˇºÙ‡∏?n¢gÉäÆJœøÂyx€[ﬁ<±ÌJŒ•Øºm÷c
+≥√Zi≥nœ"Ñ@í$x‡ùÔ(ZéDW]u¢(¬?˚ï_¬⁄⁄ÍS*ˇ.Ô3ÎˆAV¡˜T∫˘Æ(äp«˜›é7ø·˛g˜É%:&*∫Íºˆæ◊‡GÔΩÁ¿ºGΩÃö©¢|ﬂ”=˛Q.ÂÁòæù”Z„MØø7‹p˝q¸Dœ8]UN_{-~ıó±¯˚®cìÄÒº~∂|€Z7—¨œŸWûèÔ†“t∞XÎ≈3q=}€]∆˚µu∂ººÑüÔœ°R©˜◊@Ùå‚ÑatUyœªﬂÖìÎÎ˚¬§º|G˘æ8éØ(Ã Z˝~÷⁄‚±˘ÌÈÁ…Øç1®V+hµ÷∆˜aﬂÍ!~KæUb0Ëc{gë«ù~o˘Î¯ÅøØ˙±W‚Ø˛˙«˝U=cTt’∏Áe?ÇüyÀõ ÃˇA/ﬂñRB ¯Ócèa0!éc∑‘Ü5∞∞~ÊsX¿ »îB-©·ÊõnÑ`åÅî≤hqM?ØµIRCß≥ãØÛa◊m…|M∑,¨±≈öU⁄dYÜÁ›t=÷◊O¢◊Îœ3ÔΩYkE¯«Ô¿◊ø˘-\∏xÒ∏ø¢gÉäÆ
+k´´¯?0—ÌuXXI)Òÿ„gë?¸(“4Cí$0⁄ ÷¿X≠-,¨±0⁄@ãÀõ[∏˚Öw‡7„◊`≠≈h4⁄wÏÈk≠5öÕ.^ºå_ˇÕá›ÓVóó†≠Å5Ó¢çÖÒ›å∆h•p˛‚e¸‰Oº˝Éˇãﬁ^QÕ+¿^Y^∆Óˇi¸ﬁ¸—q-Dœû£¢´¬ﬂp?Ó~·ˆmüWùÁ
+!,>ˇ‡CËˆÜHjµb—B¿
++ k%å∞–Pô∆…ıB@k}Ùh-ÆΩˆñóñ0¶–⁄Bk•,2e°ïÅRôRPZ√h‘Î¯¯gæàø˛€/beyeﬂZUùªz„˝Ø√ãæˇÓ„˛Zàû*ZxœøÂy¯Ö˜ˇìπ˜œ´«?ÉØ~ÎQ¨,∑Po‘P©VP≠VP©TP´TQ´TQ≠∆®%‘j‘™1jı*n∏˛4 @iΩÔÿ3√DdJaii	7ﬂxjµ*jIçzÇF£ÜFΩéz=A£^˜óızÇ”◊¨#˘om÷VW†TvhŸ|¢Ôœh6«˝ı=m*Zxˇ¸Wçz˝¿}ˆ˝∏[ãœ?¯åRÖf≥1^ﬁÀxÁ…k)%ñóZÓ∂8x≈º|=íJ) ¿ÈkOA[w>*Ø0,óTXˇk, N≠Ø‚Süˇ>˛7üC£ŸÇå‰DÒƒÙ{ÀˇñR‚ˆ€n≈^˜⁄„˛zàû6-¥7Ω˛~‹{œÀè¥o˘˝Ò'Œ‡ˇ}Ì€Xn5G“ïØ¨Àˇ#Ñ˛>•ZÕ^xÁÌ ÄZ≠ÜjµäZ≠ÜZ≠Ü$IPØ◊ãK£—@≥ŸD´’B›È›w›Ó™ ≠qO ∞≈Ì"%`î¡ÍÚ2Äè¸·G°µ∆⁄⁄	(•|oÂøﬂ˙Ê7‚∆n8ÓØâËia1-¨ºÄ‚J∏÷î¡gø¯˜éR\sÍ$F£~—à¬ùüê¬BÁ[kÄV´âÀó/£›ﬁÜ  \≈¸+ w5ﬁna°µFR≠°›ﬁA´Q/∫|N¿=®êÄê◊_s˘…œ·„ü˙~˙’ØD%é∆Ô≈õ.ïœÔo‘Î¯Ö˜Ωø˘o~Î∏ø.¢ßåAEÎü˛“/‚ökN]Ò„‚,æÚÕG±∂∂ÍÀƒÅº.‹EáÖï ¥(˛6 íZF¸ﬁ˝	2•†SÌ™≠Ü—⁄h£aµ7e¨´T÷@)ÖXƒêëƒ˙â5®,+!`Ö‰Å.®2•±~bÚ±3¯ùﬂˇcºÍG_éµµUlµ∑ãÆ≈É!è~‡≈xÕ´_Öè}‚ì«˝ï=%Ï˙£ÖtÔÀ_Ü7æ˛uW¸8≠>ÛwèQ™∞º‘,ZE3Må»≈†[âjµÇZ=ARØ°Óª¸ı:öıöç&öÕÒe©—¬““2jı:í§Ü§Zq„¶¸s∏±VBHå˘vk ÉÁﬂt=>˛©ø√«>˘Tk	‚8ˆØÂân•îx«€ﬂäıuÆ[EãâAE'I|Ô;Rãb⁄ô3ÁÒço?Ü´´b<DQC·ªﬁl2 pa∞‘jbyyÀÀ-,µñ∞¥‘¬Úr+K-¨,˚ÀRs¸˜R´À-¨Ø-£^O|◊úÙ›~Óuπ√˚TÙ/ƒΩ&Å·0√5'O@H‡wˇÎ£◊Ôci©5—≈óõVßNûƒœΩÎù«˝’=%*Z8Ô~◊;¢ªØ|åêR
+üˇ“C–∆`©ŸÄR∂T»`}	‰ˇ0äˆÕ∏—Â‰Zm†µÎﬁ3∆@ÔªXwm˝µ÷–FCi!$§Ãõk“UN¯Éó„E Äq€2•q˚-7·”>ÑO˛Ìê$uƒqÑq–ä}√rXEQÑWæ‚¸»ΩÙ∏ø>¢+∆†¢ÖÚÇªÓƒœ˛Ã[û“c/\∏ào>Ú]¨≠.a‹ßWjçîoå”´ÿ8¬∫ãüaIàŸ=à¬îÁÓseÁÆ|\∏Èö&û]bjõtœï¶)NûXF$Åˇ¸GÇ˛`àF£9qÃ \´Z≠Ü∑øıÕ®r“ZZ0*ZQ·√¸ Nù<y≈èµæ“OkãFΩm¥À ïwE∑ôLﬁıW¸!›µ-Õ—·¬®\ﬁ^~ö¿ReüE~S÷kîªã„‰UÅ0.&Giä€næü˙ÏÉ¯ÙÁD£·Û^…J¡w›yﬁˆ÷…%âB«†¢ÖqˇkÔ√+é8fj⁄gœ·[è<Üµïe7ıQ1,¶Z1nC^6.¨òh-â‚Q.U\Ey˘—∂∏7BW¶^*Yëî˛Y~–¸¨ò Ñõ7ø”∞R À4ñ[M4jU¸ˆÔˇwåF#?XŸB“ö*óÆøÓæ◊‡÷[n9ÓØìË»T¥N¨≠·CxˇS~¸ÁˇÓ!h„KÃ≠Üê>é|«5ò¨´ÏÛ!\•ü“Ô#!"Y:oπ∞ëÓíÎî•íã¨‚8.£‹åëÙ;Ÿ¢(∞„–,YxB
+Ü‹ÚºÎWür„™öÕ¨1Ó˛©·Ù,Ó˘åÀÀKxˇ{Á∏à¬«qTºj•ÇË∏ÓÙÈßÙ¯á˘æ˘Ëw–j40•0÷è2nØ—åV00∆Œ5÷¬_(°-å—0 ¥“à U"7±¨Q~?ÎèiäÈë¥U∞
+P∆ùœ≤÷¢7Ï#)H·¶X≤⁄∏qZ„~›"ã¬M•SV⁄†Q´¢Q≠‡wˇ‡‡«Ó˘!,--a0Óªoπ/ä"º‰≈/¬k^˝j¸ﬂø˙ÿqΩDábPQ^Úí„ç˜øiö^—„§îêB‡õ?Çz=¡™Ôˆn0Æ?ˇ£ç.XÉt!\·É1~÷	òb_)$¢X∫˚ÛAΩ∞Ä_ƒˇXøÜï1„ÂBÜ√ FYä«ü8!Åäà†ÖÑR∏e?"kaåÄê"ä¸k1àÖÄ—wﬁvæÙ–7…œ~ozÌObœØW¿ü/≥nñkQû'7_∑*écºÌ≠o∆øÙelµ€«˝àAE¡3Z£›n√¯.Æ£ä¢’Jå8épbuı§6´T@ﬁuV˛O>‡¿Ù:ºÂÚr¯©ì¸Ú  å_t—M◊‰a†2çF≥âáæ˙Ïtv—j5Ä|&X∏\4˛∏⁄üµí0Fy—Üµ0∞®÷™ËvªËv∂q˘Ú‚8Ú´	ªJC?˜nÒ¸„◊·nÔuªà"vˇQ¯TºO>âNßÉ••ÊO#±üR
+µjKÕ&F£ãêÂâ—KµË∆òâ, #(ﬂ7ü„‹‰SõC" Wı¸9"€éÁ˜À[h˘ÍÚ∆/?ﬂÌıÒıo=Í∫¸¥ÜŒ\W£¡8–¨uã5
+a!§Å1˘≥k—qbπÖõÆª˝^YñèõµÄ„¨≈?s{ΩΩ„˛zâ≈†¢‡Clµ€X^^ûªX‡,˘“ÏI≠Í%‘3Ô"b‚Å(’Î·cÚ≤t»8ÔfÀœIï´˚Ï∏ÀÕ∑~¥R®◊<ˆƒ9ln∑—¨'PôqÂWªæEdMi	§ÓlïA$%Fiäì'÷∞≤ºÑQ¶«Q±T=‡%OØhú&˘ﬂÌÌm◊I8Ø?‡…Kx˛S,©NíRJ+»R’^ŒuµïöT∆áÎÅÛ-$ﬂö2>|l>ÿ◊‰≠'f¢5XÆï$ÑıƒŸsn¨∞åUæEÁ™ˇ¨E◊ù+◊∞¬Múk|ó¢˙ÉññZXj60çäPö’öøœ…˚€ÌÌ+ÓN%:*
+^ö¶ÿÿ‹(~åè⁄™ ªÊí§
+!Tñ!Fúè¬-ÌÁœ#˘øÖ¥°ï«‰[Pæ•#≠+ƒ å;Ø;—ÌWïJi4õ<˘‰%\∫¥âJ•
+¿*t∫∞I¶ñ¿]<∆˙ñùÄ«®ê T¶∞∂≤Çz=¡ˆŒŒD‡îoOVﬁ“ÄÛ.˜WKt$*
+ûµõ fŒ4óFk‘ìqa–O…»ù7*ÔÁ!?ádÛŒ@kÄADÄ©∆Ó«ﬁ∏ÛNÆ¬Œñä∞/úÚ†‘∆@X∑‚wü8ãTeà+1†5lÎ∫w˛ jõóPŸ8èÃ b\©gÛŸÛ◊ÍãıµeT+h•Áñ¢œkai≠—ﬁﬁ>ÓØñËHT¥Œû?è¸¸®a%ÑÄ6IµÜj\A™wQ≥±//«¯K—˝¶!åí%l‹˚RTv˜∞ÚË∑°”åt≠:i\E`^`açü¨6?Nﬁ"≤nBŸF≥éùùúø∏E∞Y
+cc»˚^ÖÎ>Ùnå˛ÊãËˇˆÔ¿Óm¬FU◊zÙA(ey>?W$b≠¡5'O∏±[ZoÊ†ÆæÚ∂ùN√·∏øV¢#aP—Bÿ⁄jc8†VMÆËq÷ ïjI≠ÇtîB'nÒC¿‰U}∆éªˇ¨¥ÜQÄz—]∏Â«^äaj∞ªµqˆ‹π+·Á±(üárÂ~u_Sl≥~‡0å≈„Á/`0¢Q≠¬§)∫7ﬁÇæ˛5¯çï
+˛◊}˜‚£Û,Íœ!*L·ì∑ÿ ∑I´R
+\{ÚÑ[Ä˘@aã√™˛åq≠¡≠≠6˙˝¡q≠DG¬)îh!áC¥€ÌÒ¸xG§≠AGHÍ5hïA)m¸íôr≠°µÜ“⁄›?¢S_ÜπÛ6º¿OT%ˆû+"B6Lëe
+JπKöeHSïeH3Ö,Àê˘
+C•“4Öå$∫{}ú=ˇ§+ë7ô‹z;Óxﬁı¯a ˜‘Ãã^å¥÷ ‘Ù¿f[∫ ©÷®T*X[]Å÷¶\™¸ÔÈÌÄÆ≠vΩ~ˇ∏øV¢#aãäB∑ªáÀó∑p›ÈÎé‘ıWîa˚ÛIÕF ∏»áCY_]óü≤÷¬*d˝µ5‹∞≤Ñk›Æ®^s˝ZµΩ]∑Tá_¶còhaY?a≠—"Ipyk›Óû;Gf4t•Ü¯Ùi‹‹tØ˜Ä’õOaØπÑÍpwÚΩ†‹¢P*C≠V¡Í îR0÷ïåy8Â¶´˙Úø˜z=V¸—¬`P—BËı˚ÿloAÊcÉfçá≤˚[[∆œª◊Hj0⁄"À‹X*„+ˆÚ ∫º@*É6Äj.·DR ‘4ZÏ‘Í⁄ ∆-~_›óáäÍ?◊˝ßµA%é1q˛¬EXc≈&M°´U$'÷ê/X“∞≤“B∑ﬁrÁ·¨D‰ﬂ◊¯˝!0çpÌ©SX^ja4M¥ñ ü≈ºÛU ä‚¢E¿†¢Öêè˚±‹?ÛoD≠f∞£,E%äa˝º|.Ù‰x@Ø ê!ÇÆ’–Ùˇ:™p≥Ægq±÷∞–ÄîÆ≈d›Ä‹‚úl—RS∆ ÆT∞µ”¡V{Q$∏	lu\A“j†Â_o@”ó®Oæ……Ö• F£'VW–®'H≥lﬂ{Œ[JÛ™ˇ¨µ∏ºπu‹_)—ë1®ha\∏pq‹•Á∑ÕjEM¸@–F!©WE1“A
+ô F˚©ä a¸@[®iTÉ©VQÛ”‡U T„*ñ»îv¡‰Á»ÀÀœa‹¿ﬁ|p∞+Zpœ}È“2ï!©’¸åÌF
+ƒ’
+Ú“êÄ§√V*~ö§“;(Öåî£QÜ’Âıv:√ô¡4o,ïµ˝¡ Ω^Ô∏øN¢#cP—¬∏¥±Q¯=(†¶[Zk4ííjõ{=T‚ _ù_
+. mÅL#ÉÅ¢¯«! !É@§t1∑ü[Ω√O>Öí±∞–⁄†Z≠†€Ì°Ω›FI!açrÅ!›2ÂÑ#)\Î˘†f˜∫∆K1ÄE¶R¨Æ≠†V´B+=1]“aÂÈ ∞ΩΩÉΩ=ŒÒGãÉAE£”È`kk'ßñ¢/ˇ œ
+1≠íZ’jå·pÄzí@©ÃÏ52üA\ªb
+%4î±=p
+ô2àçceïÖ∂~Í£<®ÚÂ<¸≤¡Z	\⁄ÿDî¢^≠¡h]ú_V¿hïøF ô∂÷∏≈›ª)J‹s£L!é"úæf}|n≥Ci^pu:t˜ÿ¢¢≈¡†¢Ö±ΩΩÉ≠ˆ6NÆØªEÈˆP,|ò$5‘ì:√ÀZçG¥Z+wﬁ»XàlàTπu£ÚQF¿PiåCDÉ!`lTqä}PπaT≈4Èà"â·–†Ω”ÅÑõ_pîé ïB˜{ˆÜ≈så ÙF)Ù†ù•0qD⁄OlÎWÓïŸH°Up˝©S0JÔ°¸˛gµ∞ ∑;›.îR Z*Z›Ω=lnµq˚Ì∂Ë2õ.±ŒªÀs⁄¡ƒ±D´YG¶2dY5T∆áç“ôQËw{Ëj êÿeuªàÜ7E≈@ƒ◊’gL1{z1√∫ÿ›€√h0B%ˆ”6cïõıb∞á¡ˆv¸Îﬁ–ÌwaªW“nµÎä¬ø[)$˙#∑íÔ©ın´âıÆf_ üçµ[[\(ëÉäÜ®∫51√Ù˝”◊E¿ rZg¶©)Ì÷x2Âvma”≤Œ66FhHÙ l˜z–›]hù¡°%"´‹|Êyã ó¶d bßΩÎÇ3í≈π0âê±°wy|v ¥/Ì"Ï!ä"Xß•ÚNH!Äa:B•Z¡˙â(£'˚6Éz~Õ9˛h—0®h°\|ÚÄ˘Ö”∑≠µ–∆≠µº¥•5Ü£bCÎÒÇá˘èΩ÷HGPó7pÆ;Än4±`ckzw*À`d	?√∫[œ ¯âˇ,ÄHJ)˙£Å_u•¡PêR)®≥g›çp∫é«t˛·	,˜ˆ`£æÑ√?∆â”QÜkØ=Öf≥é—(É÷„5∂¶´ˇfµ®Ü£vwª«˝5]N°D•›nœúh∫4{z˙  XYY,0å†¥F™2mê)çTidôÜ6 àsgpÊ¬%<‡[ væÛdª≠,¥∂~%Ì.ô[•W)≠4îVÿ€Î¡WNÓÁåps
+»ÕÔ<äG˙>‡ﬂŸ@„ÔDEèÄ8û–Ïciñb}mızÇ,KÁv˜Õ*¥∞÷¢€Ìb∑À†¢≈¬-îÕÕ-t:ª~Y˙IÛ ±ÛŸ#ñöƒqÑ^à(é°3âb‚Xì/ÂI‘€ObÙ©/‡∑_x3]Tæ¸%ò·¥ãZ_“ûÕÀ”•ÄJ5F£¢( ¸*å¢∏) àjåÊ^[ˆÁ¯/ÀMòOÀè:©2ö¯øênåó{‡hîbuy	µjÉ~ﬂU-J⁄Âœßﬂ`∑À“tZ,*Z([ÌmÏt:hµö•Ëá≠l´µF£—D#I∞Ω›A´ë@a#Wπg˝ `„ñÏ00_˛<æˆüàª]TŒ¸¥5>†¸åË–ì d$11Lá®ƒïqP¯sWé ¢
+l$°˙"Ü>à("i ‚Í‰ƒB Qk°ç∆â’eT‚Jk?LNºÔÉ∆Uuvªç∏¸<--îùN›ΩΩô?¬e”-*•ı*ÍI˝AJ5êY) £ÕƒíVò›mTˇÚ/`§¿®√jøÑáOBÎû«M%m“QÍÁ$,U$
+Q
+™‚Öfàä—Äí∞"*Ç©¸8)¨ F£’J◊úZá6Æƒ>?øñøÁÉñ˙ ÄçMŒÒGãáAEE)ÖKó.„wﬁ1—r ÊMJÎ~ƒµ÷Hj5,µöËıFHï °≠vãö|∆s◊¢≤V⁄¿∆nÒE¯uüÚU{≠?ßp=Äêë@¶2h£GÒ‘ºÑsf)îëª∏Ó]Ài‚a÷áUå¡hq·⁄SÎ–Zªbc¸˙X„˜öóÁOÀL$Z4*Z8ÁŒüüh9‰?ÃÛZX∆(•!ÎVWó°åFöéE5w˛ ∑ΩoQÈb	êq5üü4…5û¸äæ•Yç‡ŒU	å2∑åà›7π˚akìàπ˚Y!P©V0ÿA"¬ÈkOπu≥|ã Nùáö7ÜJ)W‰A¥hT¥pv:ùπUsœQ`mu÷(§#ÖZΩ
+e†å~
+$?íø≠Û†2ÆÍŒñgå-5~§– ¿h„+˝é∞h÷QYÅ∏#Õ™qÎk´– -ˆ(Â¯¸‘ÙÙQ”∑{˝>∂wvé˚Î#∫b*Z8õõ[Ëız®◊Î.eLv˝¡ZúZ_É—˝—’Z:S≈“Ò˘ÏEãƒ∏sR˘¨Ë∆˙ˆN±ˆ˚¯5iøH¢Ñ8ºÒt≈\˜ü1Àk+h6Îæê¬Ó;?5Îvn0∞4ùÉäŒ∆Ê∫›=‘jµâÌÛ÷c ´˛åN¨Æ ¶åÉÅÛä?ka|◊¸π®<†PåÜ ülÍEø6ï|∆S ?ùÄ2¿˙ö[á*Sô_JDÓ{ØÛ¬ªﬂ†ﬂ„ÚÛ¥xT¥p∂wv–&∫º¶ß Â∑µ÷0Fcey	ÕzÇA™°çÜ—>®¸¨Á÷/”ë/§òM∏':‡EY<À\®û\_C%é1Ë˜'ﬁﬂaA õ[Ìgˇe=T¥pÜ√!v:‹x√ı˚
+)fM¬Zæ¨,∑` ú9sB È(Û]{˘ÚÅÂ
+,Äô´ﬁóî+*éÿöÚΩÉvÍ!‚Ä)1‹ÿF£ŸDµ]U=N¨¯£E≈†¢ÖtÓ¸‹˝ÇªúÛØ\¢m¨[∫£^Ø„Æ;æ{ù!Nû8·ñªyÎ©8 L^∂'ÏTaD˛<˘I™…x¿Ã>a«ÁÆ¨?◊e≈d]∆ºBA!R•QΩÌ˘¯˛;Ô@ñiåFÈƒXÆy›}˘µR
+ù››„˛⁄àû-§Óﬁ^—í*WæÕ[⁄B ÿﬁÈ@
+âı/÷∫Yä‹Úbbπ˜|q√bZ§º¸||–‚¸Ú‚år£∆ü)+ˆœüÔ÷Ô4~úèÿ"4ÛÁ±÷ écXcqÓ‹Eké4[z~I≥åì—“¬bP—BzÚ…'ë¶)*ï ÃÛSÛ* µ5h6$IY™PPy
+¢Rj∏Èë\–ﬂWg≠q9f´å»«2âRb^Ñ·Fy˘ª{ºÕ+}Ä	m›í!ySÀ¯Êó å∆^Ø•ï[
+‰ÄnŒ2k-≤,√6ª˛hA1®h!}Â´_É6k≠:ù§î≈LÛñhœ[^[ÌéÔœDxò|u©“mõﬂõ”ÖáÒkQ¡Œ8VÈò˘2≈Ì‚1˘~„)óÚøÛÁµ~t±±R QÕ‡,f¨zl≠E´’¬∆Ê&[T¥∞T¥êî“Ü≈ZL”]`-«EQ$K˜…âVd©À0ö=πkqøîÄ1@áu≈ï∑Mﬁ/Á<n<ï∫1fÊ™∆-$Y≠VqÓ¸ÖôSL--§4ÀpÈ“%‹|”ç &WÛùué&7ÔæyÀcÃ<<kÃyûyÅ9ÔıÃ⁄^ﬁvÿÇë”K)ë¶)∫ú:âN§Öuˆ‹˘¢EÂ∆Iô}≠™Yã	ñØß/ÂŸr”€fÕ1oÒB ˚é=˝z¶√pﬂÎô±Ôº†ùıîRá«˝u=elQ—¬⁄ﬁŸqS#a´b∫%Sæ_kç8éQØ◊]ÅÖ÷®V*HÍu @ß”AøﬂﬂWM8Ô∫|{÷sŒÎñõn¡c∞¥¥ÑzΩ≠5zΩ¥R˛u§izh˜›˛nŒQ··á9ÓØãË)cP—¬J≥É·Yñ-+ -`∏H)1±ªª@@JÅ,ÀpÓ¸cp√ı◊aeeYñ«,œ‘~ÿ‡‚Ú}≥ZgÛ^ìîgŒú¡Ê÷í$¡ußO√£5Äj5F$£π«ò~!§îËÓÌπÆ?ÒÏLÔDÙlcP—¬z‰ëG—€€+™‡Ä˘3©óÉfee_˝Í◊ÒÖ/|Ií‡∆õn¬ü˝˘_‡ªè?‡ß^ı„¯ç_ˇxÙ—G˝rÚœ#xXp‰¶ªÛk≠5Z≠ñññØÎﬂbc´Å{≈+p«]w‚¸ÖHj	Ó}Ÿ£^Ø°€ÌAJ1Ûπ¶_C•R¡ìó.√çÙbP—b‚9*Z8˘è˘–ÌvQ≠V=ïﬂü/8X≠V!§ÑêR
+<˘‰%h≠°≤ªªªBLî∫Âíø∂yÁäÊùõ*∑‘z{ÆªœÉ3gœ ©%∞∆†GHí¥6∞Vœ}ŒÚÁc≠ıÁ!ˇ©”‚bãäñ÷Ω˛ QAk=—˝7˝#^.c◊J£^Ø!IjXZZ¬ŒNΩ~Èhk-⁄Ì6≤,C•R¡h4ö8WU>ÊÙﬂÛ&ƒ-óÀÁó˜5∆ ä"Ï˘Ÿ6“4ÖîÌvq,ë‘‘íÑ–J˘±U≥[mÂÌBƒqåKó.O‹/ÿHÜˇ7ã DÇµÿÿ‹,~ÙgUÒïªÍ∆≠,)#X$IgŒú√p4ÇR
+∆XÏÏt†îöX{–ÒÁUÏÕ™&úÆÃ/Q°◊Îª…fçÅ—;ù676ë$	§åä˜\˛,öëpaµ±ππÔ≥#Z$*ZH˘èÓ∑~q€¶ª÷Ä˝Â·⁄œõE1Ñî8sÓå„ñ…≤YñA5›}xP7ﬂ¨ÌÛˆ-_‚8∆nwYñ∫◊®Fiä3gœ¢^OPâ"H±ˇŸAÑPJ´˙vç(T*Z≥∫’66∑†î:t<”D´F[ƒQÑ$I`pﬁW˚Y„'pM3§iZt)>ù ö’M8=˝‡fèËÏÏ¯tˇzç¡πsgE*ï
+,lQéRJåF)˙˝¡quDOÉäèÕ'äuS)u:ùœN∑¥¥Q∞∞X]]∆Œv›ÓÆ€◊Ôó©›ÓﬁƒÍπÛä*Æd Ó¨Ä ˇé¢;;dô*”XãÛ.¬¬¢—¨C©Ò‰ªáDïJ[[[»TnÛg≥ 
+Éä¬æx˝¯O¿3—˝7}n*ø.Lª÷”ÚÚ2Œù=á,sÀ∫#™,√nwwbfˆÉÒv{ﬁ˘£ÈBè^Ø[~>c–ÌÓ¢›ncee‚»c≠Eí$8sˆÏ‰¯)À∞¢≈√†¢ÖS˛y››Ì‚¸˘®’jPJ]uy)˙¨Ç7€É@•Z≈πÁ}…∑oÌ¯ ∂€m◊›fûri^·Ñ+É◊3[u≥¶k≤÷¢◊Ô≠:w_ñ)ú?+ÀÀ˛⁄— ÂÛﬁ‹⁄*fyü˛ÏàÉäÇgg∂‹è±å"lµ€E·C>√√º.2!¥1h4®ƒ1Œû;Á‹«˚diÜùù*ïJÒò¸∫|ªºm˙πÚY!¢(ÇîrÓ˛y	9 Ù˚˝©˜ÌñπxÒ"jµö˜Âè[>Œ¨‡Œ{πä?ﬂ+>:∆-é£¢îw≠a4Jq˜›w„Ò«ﬂ◊]Áˆ€?ßﬁ≠∑›äˆvÉ¡–ﬂoã•ﬂçµh4∏ı÷[—ÎıˆÕNëßx53ÓñÕõF	pÛ&IÇoºiö∫«OæMl\∫åoºµjgœûCµZ=¸≤∑‹r∂∂⁄„◊$ƒ‘WEãÄAEã£û¸O∑D˚ˇ¸”?≈ÂÀó∞πµÂZ-ûºu·åÀ!r›ıßÒ‡É_Föf»&tK∫`˘ﬂˇÁœ∞±±âKó.Ì{˛i¶¥‡°Ù3@‰€ÚÌÛhmP´V—Zj·k_ˇz±Ø{˝Ä—ª›.˛˝øˇX]]≈÷÷ñ[›7_⁄ﬁ˙ßÇY h4õ∏tyEÍYŒ§DãFºÙûW≤ÄÇ5Ò#_˙QŒå5à¢R∏p≠10÷¿hSú”…KΩãk;>G§≤Ã/#èâcÁ›kœ’?w…Ω˛"d˝}2ä«±[AJﬂ˝'#H! •Î^îëÑîÑø_ Z)h£K›èæ{0RÄ-*
+[T¥0Ïæˇ:FkX?/ü ≥?†ä±I.‹‡CM ÄîEk©‹Mﬂ{∂Â1·ÇHñd|Ø±÷ùP6÷“∂XVD¬X	)›y:#%§0„ñù›˜d„œï›8-4Q
+"◊ò∑ö¨±≈}y@MóãﬂUh≠Ö»ªŒÑÔÙ]hœfTÒ‡≥BÓoÌ¯¿4~aåõ•÷O6kã◊oçq!%%LQx1£f*c¢¿†¢ÖT!‡
+|ƒ
+	!`$ §ï˚g-˜Bå[j‚∏´‚J›~˘ÌÚ97wëì∑•Ä,mœª¯ä(ú»$û®¢E¬†¢Ö·¬iV«U≥A ÷é( DQ< òâ˝-, Ú“tªˇÁ˚8´‘ pØ=oaâ<| Å%ÛsNæÂ%‡˜+}hDéAE¶yf	∏j6ÿâV‡∫ˆ‹îKb¢EÂ√ E…Dquº-*1’
+„¥ÚÖ©’8¨ÚjA‰¡U:N©ô∆n?Z(*ZÆèœ∑ÜÚm(µö¸èØ§êæÕ‰ÕZ∏ø]c´<•ëùj8MÜ÷‘Õg˛-∏a≤®BLÑUπı4Ó˛€◊-ËˇÁœnïŒâçœQ±êÇB«†¢≈a'[Sy@Ÿ©í∂bÿê`]ãJSçœAMÃx1#†é”ºY5äÎRâ˘˛ô)0Ÿı'&S˛ «˝âéåAEAõòÈ°tÓ…'`≈dè¶≥F@àºp¢H˛÷¨…bè˚=Ôˇ∆€ÀS1a‹™ÇòÏtõJ≠©"¨Q¥hTºY”πmÆZØ®¯≥Ä˚9ˆ3Mà“˘(·gr8 R«ùT≈õ,ﬂúúQb÷úÉò:O53Ã‹Œ˚éC2-îº¢œ"o`˘äøâr9nmâ¸|îò(ú(ó§/1Ÿ[Wî∞˚ÌEÎ	ÁØˆT0òhÒ0®hÒ·Œ9Â≠¶ºp›
+7ï›t5†oMπﬂËR˙æ"äg{xÔΩ…yo}|ﬂæ™¿˝-ßÒÓ˚ª¸ÿö¢E¡†¢Ö∞Ø˚o"¨‡∫ıD)Ä∆}Å≈π≈˛sZπ|NÒ„.Mø4q–ùì˚L—tï ¿ñ-4-åya¿œFå#gﬁA¸µùﬁº •b˙œâìVS7≈¨áîˆ	¯}MaP—bÀã	Ú*æ¢%1ûgb\º^˛aü—r⁄?·≈sÎ¿Áüˇbƒƒ›˚+âÉäJﬁÿW±'¶⁄Bá.ø4„|‘æˆÁ∏¿Á?8tƒ‹cîœ‡¢≈ƒ†¢Ö47∞∆;∏´Ú∂b÷Ùö≥ŸÁ∏I%é∞e˙˝]…gE¥®T¥– ?¬ˆ∞IdãRÌ£˝p/˙œ;äÆ*∫jÃ˙aŒ<4ƒ√àæ0®Ë™6=É-˘ÙADDÙÏaPQ–TDD4çAEDDAcPQ–TDD4çAEDDAcPQ–TDD4çAEDDAcPQ–TDD4çAEDDAcPQ–TDD4çAEDDAcPQ–TDD4çAEDDAcPQ–TDD4çAEDDAcPQ–TDD4çAEDDAcPQ–TDD4çAEDDAcPQ–TDD4çAEDDAcPQ–TDD4çAEDDAcPQ–TDD4çAEDDAcPQ–TDD4çAEDDAcPQ–TDD4çAEDDAcPQ–TDD4çAEDDAcPQ–TDD4çAEDDAcPQ–TDD4çAEDDAcPQ–TDD4çAEDDAcPQ–TDD4çAEDDAcPQ–TDD4çAEDDAcPQ–TDD4çAEDDAcPQ–TDD4çAEDDAcPQ–TDD4çAEDDAcPQ–TDD4çAEDDAcPQ–TDD4çAEDDAcPQ–TDD4çAEDDAcPQ–TDD4çAEDDA˚ˇË3≠]6æ    IENDÆB`Ç                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            var baseIndexOf = require('../internal/baseIndexOf'),
+    binaryIndex = require('../internal/binaryIndex');
+
+/* Native method references for those with the same name as other `lodash` methods. */
+var nativeMax = Math.max;
+
+/**
+ * Gets the index at which the first occurrence of `value` is found in `array`
+ * using [`SameValueZero`](http://ecma-international.org/ecma-262/6.0/#sec-samevaluezero)
+ * for equality comparisons. If `fromIndex` is negative, it's used as the offset
+ * from the end of `array`. If `array` is sorted providing `true` for `fromIndex`
+ * performs a faster binary search.
+ *
+ * @static
+ * @memberOf _
+ * @category Array
+ * @param {Array} array The array to search.
+ * @param {*} value The value to search for.
+ * @param {boolean|number} [fromIndex=0] The index to search from or `true`
+ *  to perform a binary search on a sorted array.
+ * @returns {number} Returns the index of the matched value, else `-1`.
+ * @example
+ *
+ * _.indexOf([1, 2, 1, 2], 2);
+ * // => 1
+ *
+ * // using `fromIndex`
+ * _.indexOf([1, 2, 1, 2], 2, 2);
+ * // => 3
+ *
+ * // performing a binary search
+ * _.indexOf([1, 1, 2, 2], 2, true);
+ * // => 2
+ */
+function indexOf(array, value, fromIndex) {
+  var length = array ? array.length : 0;
+  if (!length) {
+    return -1;
+  }
+  if (typeof fromIndex == 'number') {
+    fromIndex = fromIndex < 0 ? nativeMax(length + fromIndex, 0) : fromIndex;
+  } else if (fromIndex) {
+    var index = binaryIndex(array, value);
+    if (index < length &&
+        (value === value ? (value === array[index]) : (array[index] !== array[index]))) {
+      return index;
+    }
+    return -1;
+  }
+  return baseIndexOf(array, value, fromIndex || 0);
+}
+
+module.exports = indexOf;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
