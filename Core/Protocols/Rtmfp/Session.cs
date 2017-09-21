@@ -39,7 +39,7 @@ namespace CSharpRTMP.Core.Protocols.Rtmfp
         private ulong _nextFlowWriterId;
         private readonly MemoryStream _outputBuffer = Utils.Rms.GetStream();
         public Dictionary<long, Action<Flow, Variant>> CallBacks = new Dictionary<long, Action<Flow, Variant>>();
-        public Dictionary<uint,HashSet<Flow>> FlowSynchronization = new Dictionary<uint, HashSet<Flow>>();
+        public Dictionary<uint, HashSet<Flow>> FlowSynchronization = new Dictionary<uint, HashSet<Flow>>();
         public uint KeepAliveServer = 10000;
         public double PushCallBack(Action<Flow, Variant> callback)
         {

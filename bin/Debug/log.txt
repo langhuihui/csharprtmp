@@ -3504,3 +3504,8 @@
 2016-06-15 14:46:34,125 8 CSharpRTMP.Core.Protocols.BaseProtocol [INFO ] - Enqueue for delete for protocol CSharpRTMP.Core.Streaming.BaseInFileStream+InFileStreamTimer
 2016-06-15 14:46:34,247 1 CSharpRTMP.Core.Protocols.BaseProtocol [INFO ] - Enqueue for delete for protocol Core.Protocols.Rtmp.InboundRTMPProtocol
 2016-06-15 14:46:34,248 1 CSharpRTMP.Core.BaseClientApplication [INFO ] - Protocol Core.Protocols.Rtmp.InboundRTMPProtocol unregistered from application: Test/8233
+2016-07-14 17:48:00,366 1 CSharpRTMP.Core.ConfigFile [INFO ] - Server Start!
+2016-07-14 17:48:38,527 1 CSharpRTMP.Core.ConfigFile [INFO ] - Server Start!
+2016-07-14 17:51:11,330 1 CSharpRTMP.Core.ConfigFile [INFO ] - Server Start!
+2016-07-14 17:51:35,734 1 CSharpRTMP.Core.Protocols.BaseProtocol [INFO ] - Enqueue for delete for protocol Core.Protocols.Rtmp.InboundRTMPProtocol
+2016-07-14 17:51:35,744 1 CSharpRTMP.Core.BaseClientApplication [INFO ] - Protocol Core.Protocols.Rtmp.InboundRTMPProtocol unregistered from application: live

@@ -1,2 +1,6 @@
 /$tf/
 /.vs/
+*/bin
+*/Debug
+*/obj
+

@@ -78,6 +78,7 @@ namespace CSharpRTMP.Common
 
         public void WriteFlvTag(MemoryStream pData,int timestamp,bool isAudio)
         {
+            Debug.WriteLine("{0},{1}", timestamp, pData?.Length);
             lock (this)
             {
                 var totalLength = (int)(pData?.Length ?? 0);

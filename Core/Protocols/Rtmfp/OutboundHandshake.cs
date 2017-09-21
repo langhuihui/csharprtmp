@@ -117,6 +117,7 @@ namespace CSharpRTMP.Core.Protocols.Rtmfp
             var length = reader.ReadUInt16();
             byte[] tag;
             Logger.Debug("handshake {0:X} len:{1}",type,length);
+            Debug.WriteLine("handshake {0:X} len:{1}", type, length);
             switch (type)
             {
                 case 0x70:
@@ -134,6 +135,7 @@ namespace CSharpRTMP.Core.Protocols.Rtmfp
                     tag = reader.ReadBytes(reader.ReadByte());
                     var flag = reader.ReadByte();
                     var address = new IPEndPoint(new IPAddress(reader.ReadBytes(4)), reader.ReadInt16());
+                    
                     Target.Address.Port = address.Port;
                     Logger.Debug("redirect to {0}",address.ToString());
                     Handler.FarProtocol.IOHandler.Socket.Connect(Target.Address);

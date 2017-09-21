@@ -288,6 +288,7 @@ namespace CSharpRTMP.Core.Protocols.Rtmfp
         {
             var type = message.ReadByte();
             AMF0Reader amf = new AMF0Reader(message);
+            
             switch (type)
             {
                 case Defines.RM_HEADER_MESSAGETYPE_INVOKE:
@@ -312,7 +313,8 @@ namespace CSharpRTMP.Core.Protocols.Rtmfp
                         case 0x29:
                             var keepAliveServer = amf.ReadUInt32();
                             var keepAlivePeer = amf.ReadUInt32();
-                            Logger.Debug("keepAliveServer:{0},keepAlivePeer:{1}", keepAliveServer, keepAlivePeer);
+                            
+                            //Debug.WriteLine("keepAliveServer:{0},keepAlivePeer:{1}", keepAliveServer, keepAlivePeer);
                             Band.KeepAliveServer = keepAliveServer;
                             break;
                         case 0x22:
@@ -325,18 +327,22 @@ namespace CSharpRTMP.Core.Protocols.Rtmfp
                                     foreach (var flow in Band.FlowSynchronization[syncID])
                                         flow.SyncDone();
                                     Band.FlowSynchronization[syncID].Clear();
+                                    Band.FlowSynchronization.Remove(syncID);
                                 }
                                 else
                                 {
                                     Band.FlowSynchronization[syncID].Add(this);
+                                    //Debug.WriteLine("syncID:{0},id:{1}", syncID, this.Id);
                                     IsWaitingSync = true;
                                 }
                             }
                             else
                             {
                                 Band.FlowSynchronization[syncID] = new HashSet<Flow> {this};
+                                //Debug.WriteLine("syncID:{0},id:{1}", syncID, this.Id);
                                 IsWaitingSync = true;
                             }
+                            
                             //Logger.Debug("syncID:{0},count:{1}", syncID, count);
                             break;
                     }

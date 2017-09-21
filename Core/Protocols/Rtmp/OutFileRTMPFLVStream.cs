@@ -8,6 +8,7 @@ using CSharpRTMP.Common;
 using CSharpRTMP.Core.Protocols;
 using CSharpRTMP.Core.Protocols.Rtmp;
 using CSharpRTMP.Core.Streaming;
+using System.Diagnostics;
 
 namespace Core.Protocols.Rtmp
 {
@@ -48,6 +49,7 @@ namespace Core.Protocols.Rtmp
         public override bool FeedData(Stream pData, uint dataLength, uint processedLength, uint totalLength, uint absoluteTimestamp,
             bool isAudio)
         {
+            
             if (!_timeBase.HasValue) _timeBase = absoluteTimestamp;
             var buffer = isAudio ? _audioBuffer : _videoBuffer;
             pData?.CopyDataTo(buffer,(int)dataLength);
@@ -59,7 +61,7 @@ namespace Core.Protocols.Rtmp
             if (buffer.Length < totalLength)  return true;
             TotalBytes += dataLength;
             _file.WriteFlvTag(buffer, (int)(absoluteTimestamp - _timeBase + _timeOffset), isAudio);
-
+            
             return true;
         }
 

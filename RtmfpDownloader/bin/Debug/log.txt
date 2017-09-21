@@ -237,3 +237,164 @@
 2016-03-06 09:02:02,959 16 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - NetStream.Play.Reset
 2016-03-06 09:02:02,959 15 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - 6,onStatus
 2016-03-06 09:02:02,959 15 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - NetStream.Play.Start
+2017-06-22 21:30:37,628 6 CSharpRTMP.Core.Protocols.Rtmfp.FlowConnection [INFO ] - _result
+2017-06-22 21:30:37,829 6 CSharpRTMP.Core.Protocols.Rtmfp.FlowConnection [INFO ] - _result
+2017-06-22 21:30:38,067 9 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - 6,onStatus
+2017-06-22 21:30:38,067 9 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - NetStream.Play.Reset
+2017-06-22 21:30:38,068 9 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - 6,onStatus
+2017-06-22 21:30:38,068 9 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - NetStream.Play.Start
+2017-06-22 21:30:47,731 1 CSharpRTMP.Core.Protocols.BaseProtocol [INFO ] - Enqueue for delete for protocol RtmfpDownloader.DownloadSession
+2017-06-22 21:30:47,736 1 CSharpRTMP.Core.BaseClientApplication [INFO ] - Protocol RtmfpDownloader.DownloadSession unregistered from application: live1/
+2017-06-22 21:30:47,755 1 CSharpRTMP.Core.Protocols.BaseProtocol [INFO ] - Enqueue for delete for protocol CSharpRTMP.Core.Protocols.UDPProtocol
+2017-06-22 21:33:18,169 8 CSharpRTMP.Core.Protocols.Rtmfp.FlowConnection [INFO ] - _result
+2017-06-22 21:33:18,284 8 CSharpRTMP.Core.Protocols.Rtmfp.FlowConnection [INFO ] - _result
+2017-06-22 21:33:18,402 8 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - 6,onStatus
+2017-06-22 21:33:18,402 8 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - NetStream.Play.Reset
+2017-06-22 21:33:18,404 10 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - 6,onStatus
+2017-06-22 21:33:18,405 10 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - NetStream.Play.Start
+2017-06-22 21:33:21,003 1 CSharpRTMP.Core.Protocols.BaseProtocol [INFO ] - Enqueue for delete for protocol RtmfpDownloader.DownloadSession
+2017-06-22 21:33:21,008 1 CSharpRTMP.Core.BaseClientApplication [INFO ] - Protocol RtmfpDownloader.DownloadSession unregistered from application: live1/
+2017-06-22 21:33:21,026 1 CSharpRTMP.Core.Protocols.BaseProtocol [INFO ] - Enqueue for delete for protocol CSharpRTMP.Core.Protocols.UDPProtocol
+2017-06-22 21:59:31,975 1 CSharpRTMP.Core.Protocols.BaseProtocol [INFO ] - Enqueue for delete for protocol RtmfpDownloader.DownloadSession
+2017-06-22 21:59:32,022 1 CSharpRTMP.Core.BaseClientApplication [INFO ] - Protocol RtmfpDownloader.DownloadSession unregistered from application: live1/
+2017-06-22 21:59:32,023 1 CSharpRTMP.Core.Protocols.BaseProtocol [INFO ] - Enqueue for delete for protocol CSharpRTMP.Core.Protocols.UDPProtocol
+2017-06-22 22:00:05,605 11 CSharpRTMP.Core.Protocols.Rtmfp.FlowConnection [INFO ] - _result
+2017-06-22 22:00:05,948 11 CSharpRTMP.Core.Protocols.Rtmfp.FlowConnection [INFO ] - _result
+2017-06-22 22:00:06,117 8 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - 6,onStatus
+2017-06-22 22:00:06,118 8 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - NetStream.Play.Reset
+2017-06-22 22:00:06,120 11 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - 6,onStatus
+2017-06-22 22:00:06,120 11 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - NetStream.Play.Start
+2017-06-22 22:00:06,257 1 CSharpRTMP.Core.Protocols.BaseProtocol [INFO ] - Enqueue for delete for protocol RtmfpDownloader.DownloadSession
+2017-06-22 22:00:06,261 1 CSharpRTMP.Core.BaseClientApplication [INFO ] - Protocol RtmfpDownloader.DownloadSession unregistered from application: live1/
+2017-06-22 22:00:06,280 1 CSharpRTMP.Core.Protocols.BaseProtocol [INFO ] - Enqueue for delete for protocol CSharpRTMP.Core.Protocols.UDPProtocol
+2017-09-11 22:19:08,758 10 CSharpRTMP.Core.Protocols.Rtmfp.FlowConnection [INFO ] - _result
+2017-09-18 21:58:32,637 10 CSharpRTMP.Core.Protocols.Rtmfp.FlowConnection [INFO ] - _result
+2017-09-18 21:58:32,751 10 CSharpRTMP.Core.Protocols.Rtmfp.FlowConnection [INFO ] - _result
+2017-09-18 21:58:32,954 12 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - 6,onStatus
+2017-09-18 21:58:32,954 12 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - NetStream.Play.Reset
+2017-09-18 21:58:32,958 12 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - 6,onStatus
+2017-09-18 21:58:32,958 12 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - NetStream.Play.Start
+2017-09-18 21:58:54,219 1 CSharpRTMP.Core.Protocols.BaseProtocol [INFO ] - Enqueue for delete for protocol RtmfpDownloader.DownloadSession
+2017-09-18 21:58:54,225 1 CSharpRTMP.Core.BaseClientApplication [INFO ] - Protocol RtmfpDownloader.DownloadSession unregistered from application: live1/
+2017-09-18 21:58:54,250 1 CSharpRTMP.Core.Protocols.BaseProtocol [INFO ] - Enqueue for delete for protocol CSharpRTMP.Core.Protocols.UDPProtocol
+2017-09-18 22:01:32,316 10 CSharpRTMP.Core.Protocols.Rtmfp.FlowConnection [INFO ] - _result
+2017-09-18 22:01:32,373 10 CSharpRTMP.Core.Protocols.Rtmfp.FlowConnection [INFO ] - _result
+2017-09-18 22:01:32,426 12 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - 6,onStatus
+2017-09-18 22:01:32,427 12 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - NetStream.Play.Reset
+2017-09-18 22:01:32,428 12 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - 6,onStatus
+2017-09-18 22:01:32,428 12 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - NetStream.Play.Start
+2017-09-18 22:01:35,567 1 CSharpRTMP.Core.Protocols.BaseProtocol [INFO ] - Enqueue for delete for protocol RtmfpDownloader.DownloadSession
+2017-09-18 22:01:35,571 1 CSharpRTMP.Core.BaseClientApplication [INFO ] - Protocol RtmfpDownloader.DownloadSession unregistered from application: live1/
+2017-09-18 22:01:35,590 1 CSharpRTMP.Core.Protocols.BaseProtocol [INFO ] - Enqueue for delete for protocol CSharpRTMP.Core.Protocols.UDPProtocol
+2017-09-18 22:03:49,432 10 CSharpRTMP.Core.Protocols.Rtmfp.FlowConnection [INFO ] - _result
+2017-09-18 22:03:49,498 10 CSharpRTMP.Core.Protocols.Rtmfp.FlowConnection [INFO ] - _result
+2017-09-18 22:03:49,547 10 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - 6,onStatus
+2017-09-18 22:03:49,547 10 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - NetStream.Play.Reset
+2017-09-18 22:03:49,547 10 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - 6,onStatus
+2017-09-18 22:03:49,547 10 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - NetStream.Play.Start
+2017-09-18 22:03:52,262 1 CSharpRTMP.Core.Protocols.BaseProtocol [INFO ] - Enqueue for delete for protocol RtmfpDownloader.DownloadSession
+2017-09-18 22:03:52,266 1 CSharpRTMP.Core.BaseClientApplication [INFO ] - Protocol RtmfpDownloader.DownloadSession unregistered from application: live1/
+2017-09-18 22:03:52,281 1 CSharpRTMP.Core.Protocols.BaseProtocol [INFO ] - Enqueue for delete for protocol CSharpRTMP.Core.Protocols.UDPProtocol
+2017-09-18 22:06:11,819 10 CSharpRTMP.Core.Protocols.Rtmfp.FlowConnection [INFO ] - _result
+2017-09-18 22:06:11,879 10 CSharpRTMP.Core.Protocols.Rtmfp.FlowConnection [INFO ] - _result
+2017-09-18 22:06:11,930 10 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - 6,onStatus
+2017-09-18 22:06:11,930 10 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - NetStream.Play.Reset
+2017-09-18 22:06:11,931 10 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - 6,onStatus
+2017-09-18 22:06:11,931 10 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - NetStream.Play.Start
+2017-09-18 22:06:13,591 1 CSharpRTMP.Core.Protocols.BaseProtocol [INFO ] - Enqueue for delete for protocol RtmfpDownloader.DownloadSession
+2017-09-18 22:06:13,594 1 CSharpRTMP.Core.BaseClientApplication [INFO ] - Protocol RtmfpDownloader.DownloadSession unregistered from application: live1/
+2017-09-18 22:06:13,608 1 CSharpRTMP.Core.Protocols.BaseProtocol [INFO ] - Enqueue for delete for protocol CSharpRTMP.Core.Protocols.UDPProtocol
+2017-09-18 22:25:09,818 10 CSharpRTMP.Core.Protocols.Rtmfp.FlowConnection [INFO ] - _result
+2017-09-18 22:25:09,882 10 CSharpRTMP.Core.Protocols.Rtmfp.FlowConnection [INFO ] - _result
+2017-09-18 22:25:09,946 12 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - 6,onStatus
+2017-09-18 22:25:09,946 12 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - NetStream.Play.Reset
+2017-09-18 22:25:09,947 12 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - 6,onStatus
+2017-09-18 22:25:09,947 12 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - NetStream.Play.Start
+2017-09-18 22:44:33,452 19 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - 6,onStatus
+2017-09-18 22:44:33,453 19 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - NetStream.Play.InsufficientBW
+2017-09-18 22:44:33,453 19 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - 6,onStatus
+2017-09-18 22:44:33,453 19 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - NetStream.Play.InsufficientBW
+2017-09-18 22:44:33,453 19 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - 6,onStatus
+2017-09-18 22:44:33,453 19 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - NetStream.Play.UnpublishNotify
+2017-09-18 22:47:29,377 1 CSharpRTMP.Core.Protocols.BaseProtocol [INFO ] - Enqueue for delete for protocol RtmfpDownloader.DownloadSession
+2017-09-18 22:47:29,383 1 CSharpRTMP.Core.BaseClientApplication [INFO ] - Protocol RtmfpDownloader.DownloadSession unregistered from application: live1/
+2017-09-18 22:47:29,401 1 CSharpRTMP.Core.Protocols.BaseProtocol [INFO ] - Enqueue for delete for protocol CSharpRTMP.Core.Protocols.UDPProtocol
+2017-09-18 22:47:37,583 1 RtmfpDownloader.App [ERROR] - System.Windows.Threading.DispatcherUnhandledExceptionEventArgs
+System.ObjectDisposedException: 无法访问已关闭的文件。
+   在 System.IO.__Error.FileNotOpen()
+   在 System.IO.FileStream.Flush(Boolean flushToDisk)
+   在 CSharpRTMP.Common.MediaFile.Dispose() 位置 D:\projects\csharprtmp\Common\MediaFile.cs:行号 235
+   在 Core.Protocols.Rtmp.OutFileRTMPFLVStream.Dispose() 位置 D:\projects\csharprtmp\Core\Protocols\Rtmp\OutFileRTMPFLVStream.cs:行号 35
+   在 RtmfpDownloader.DownloadSession.EnqueueForDelete() 位置 D:\projects\csharprtmp\RtmfpDownloader\DownloadSession.cs:行号 43
+   在 RtmfpDownloader.DownloadProtocol.Stop() 位置 D:\projects\csharprtmp\RtmfpDownloader\DownloadProtocol.cs:行号 100
+   在 RtmfpDownloader.MainWindow.DeleteDownload(Object sender, RoutedEventArgs e) 位置 D:\projects\csharprtmp\RtmfpDownloader\MainWindow.xaml.cs:行号 149
+   在 System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   在 System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   在 System.Windows.Controls.Primitives.ButtonBase.OnClick()
+   在 System.Windows.Controls.Button.OnClick()
+   在 System.Windows.Controls.Primitives.ButtonBase.OnMouseLeftButtonUp(MouseButtonEventArgs e)
+   在 System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   在 System.Windows.RoutedEventHandlerInfo.InvokeHandler(Object target, RoutedEventArgs routedEventArgs)
+   在 System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   在 System.Windows.UIElement.ReRaiseEventAs(DependencyObject sender, RoutedEventArgs args, RoutedEvent newEvent)
+   在 System.Windows.UIElement.OnMouseUpThunk(Object sender, MouseButtonEventArgs e)
+   在 System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   在 System.Windows.RoutedEventHandlerInfo.InvokeHandler(Object target, RoutedEventArgs routedEventArgs)
+   在 System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   在 System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   在 System.Windows.UIElement.RaiseTrustedEvent(RoutedEventArgs args)
+   在 System.Windows.Input.InputManager.ProcessStagingArea()
+   在 System.Windows.Input.InputManager.ProcessInput(InputEventArgs input)
+   在 System.Windows.Input.InputProviderSite.ReportInput(InputReport inputReport)
+   在 System.Windows.Interop.HwndMouseInputProvider.ReportInput(IntPtr hwnd, InputMode mode, Int32 timestamp, RawMouseActions actions, Int32 x, Int32 y, Int32 wheel)
+   在 System.Windows.Interop.HwndMouseInputProvider.FilterMessage(IntPtr hwnd, WindowMessage msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   在 System.Windows.Interop.HwndSource.InputFilterMessage(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   在 MS.Win32.HwndWrapper.WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   在 MS.Win32.HwndSubclass.DispatcherCallbackOperation(Object o)
+   在 System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   在 System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+2017-09-18 22:49:41,060 15 CSharpRTMP.Core.Protocols.Rtmfp.FlowConnection [INFO ] - _result
+2017-09-18 22:49:41,128 15 CSharpRTMP.Core.Protocols.Rtmfp.FlowConnection [INFO ] - _result
+2017-09-18 22:49:41,179 15 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - 6,onStatus
+2017-09-18 22:49:41,180 15 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - NetStream.Play.Reset
+2017-09-18 22:49:41,180 15 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - 6,onStatus
+2017-09-18 22:49:41,180 15 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - NetStream.Play.Start
+2017-09-18 22:52:21,382 14 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - 6,onStatus
+2017-09-18 22:52:21,382 14 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - NetStream.Play.InsufficientBW
+2017-09-18 23:04:30,832 1 CSharpRTMP.Core.Protocols.BaseProtocol [INFO ] - Enqueue for delete for protocol RtmfpDownloader.DownloadSession
+2017-09-18 23:04:30,839 1 CSharpRTMP.Core.BaseClientApplication [INFO ] - Protocol RtmfpDownloader.DownloadSession unregistered from application: live1/
+2017-09-18 23:04:30,862 1 CSharpRTMP.Core.Protocols.BaseProtocol [INFO ] - Enqueue for delete for protocol CSharpRTMP.Core.Protocols.UDPProtocol
+2017-09-18 23:11:17,260 10 CSharpRTMP.Core.Protocols.Rtmfp.FlowConnection [INFO ] - _result
+2017-09-18 23:11:17,332 10 CSharpRTMP.Core.Protocols.Rtmfp.FlowConnection [INFO ] - _result
+2017-09-18 23:11:17,398 13 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - 6,onStatus
+2017-09-18 23:11:17,398 13 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - NetStream.Play.Reset
+2017-09-18 23:11:17,418 10 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - 6,onStatus
+2017-09-18 23:11:17,418 10 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - NetStream.Play.Start
+2017-09-18 23:11:32,946 1 CSharpRTMP.Core.Protocols.BaseProtocol [INFO ] - Enqueue for delete for protocol RtmfpDownloader.DownloadSession
+2017-09-18 23:11:32,951 1 CSharpRTMP.Core.BaseClientApplication [INFO ] - Protocol RtmfpDownloader.DownloadSession unregistered from application: live1/
+2017-09-18 23:11:32,970 1 CSharpRTMP.Core.Protocols.BaseProtocol [INFO ] - Enqueue for delete for protocol CSharpRTMP.Core.Protocols.UDPProtocol
+2017-09-18 23:12:13,572 10 CSharpRTMP.Core.Protocols.Rtmfp.FlowConnection [INFO ] - _error
+2017-09-18 23:12:13,599 10 CSharpRTMP.Core.BaseClientApplication [INFO ] - call：_error
+2017-09-18 23:12:13,599 10 CSharpRTMP.Core.Protocols.Rtmfp.FlowConnection [INFO ] - close
+2017-09-18 23:12:13,599 10 CSharpRTMP.Core.BaseClientApplication [INFO ] - call：close
+2017-09-18 23:12:44,938 1 CSharpRTMP.Core.Protocols.BaseProtocol [INFO ] - Enqueue for delete for protocol RtmfpDownloader.DownloadSession
+2017-09-18 23:12:44,940 1 CSharpRTMP.Core.BaseClientApplication [INFO ] - Protocol RtmfpDownloader.DownloadSession unregistered from application: live1/
+2017-09-18 23:12:44,941 1 CSharpRTMP.Core.Protocols.BaseProtocol [INFO ] - Enqueue for delete for protocol CSharpRTMP.Core.Protocols.UDPProtocol
+2017-09-18 23:12:47,107 9 CSharpRTMP.Core.Protocols.Rtmfp.FlowConnection [INFO ] - _result
+2017-09-18 23:12:47,128 9 CSharpRTMP.Core.Protocols.Rtmfp.FlowConnection [INFO ] - _result
+2017-09-18 23:12:47,182 13 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - 6,onStatus
+2017-09-18 23:12:47,182 13 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - NetStream.Play.Reset
+2017-09-18 23:12:47,182 13 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - 6,onStatus
+2017-09-18 23:12:47,182 13 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - NetStream.Play.Start
+2017-09-18 23:14:13,218 1 CSharpRTMP.Core.Protocols.BaseProtocol [INFO ] - Enqueue for delete for protocol RtmfpDownloader.DownloadSession
+2017-09-18 23:14:13,219 1 CSharpRTMP.Core.BaseClientApplication [INFO ] - Protocol RtmfpDownloader.DownloadSession unregistered from application: live1/
+2017-09-18 23:14:13,232 1 CSharpRTMP.Core.Protocols.BaseProtocol [INFO ] - Enqueue for delete for protocol CSharpRTMP.Core.Protocols.UDPProtocol
+2017-09-18 23:16:40,660 10 CSharpRTMP.Core.Protocols.Rtmfp.FlowConnection [INFO ] - _result
+2017-09-18 23:16:40,717 10 CSharpRTMP.Core.Protocols.Rtmfp.FlowConnection [INFO ] - _result
+2017-09-18 23:16:40,784 10 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - 6,onStatus
+2017-09-18 23:16:40,784 10 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - NetStream.Play.Reset
+2017-09-18 23:16:40,786 13 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - 6,onStatus
+2017-09-18 23:16:40,787 13 CSharpRTMP.Core.Protocols.Rtmfp.FlowStream [INFO ] - NetStream.Play.Start
+2017-09-18 23:22:22,205 1 CSharpRTMP.Core.Protocols.BaseProtocol [INFO ] - Enqueue for delete for protocol RtmfpDownloader.DownloadSession
+2017-09-18 23:22:22,208 1 CSharpRTMP.Core.BaseClientApplication [INFO ] - Protocol RtmfpDownloader.DownloadSession unregistered from application: live1/
+2017-09-18 23:22:22,221 1 CSharpRTMP.Core.Protocols.BaseProtocol [INFO ] - Enqueue for delete for protocol CSharpRTMP.Core.Protocols.UDPProtocol
